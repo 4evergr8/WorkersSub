@@ -1,0 +1,11 @@
+name = "sub"
+main = "src/index.js"
+compatibility_date = "2025-03-12"
+
+[observability.logs]
+enabled = true
+
+[assets]
+directory = "./src"
+binding = "ASSETS"
+
