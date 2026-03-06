@@ -1,5 +1,5 @@
 name = "sub"
-main = "src/index.js"
+main = "index.js"
 compatibility_date = "2025-03-12"
 
 [observability.logs]
@@ -8,4 +8,5 @@ enabled = true
 [assets]
 directory = "./src"
 binding = "ASSETS"
+#npx --yes wrangler@latest deploy
 
