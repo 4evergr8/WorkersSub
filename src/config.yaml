@@ -59,6 +59,9 @@ rules:
   - GEOSITE,category-ads-all,REJECT
 
 
+  - DOMAIN-KEYWORD,teracloud,⚡自动选择⚡
+
+
   - GEOSITE,geolocation-cn,DIRECT
   - GEOSITE,private,DIRECT
   - GEOIP,cn,DIRECT
@@ -67,9 +70,9 @@ rules:
   - GEOSITE,CATEGORY-AI-!CN,🧠人工智能🧠
 
 
-  - GEOSITE,DLSITE,🎌日本网站🎌
-  - DOMAIN,rss.4evergr8.workers.dev,🎌日本网站🎌
-  - DOMAIN-SUFFIX,jp,🎌日本网站🎌
+  - GEOSITE,DLSITE,🇯🇵日本网站🇯🇵
+  - DOMAIN,rss.4evergr8.workers.dev,🇯🇵日本网站🇯🇵
+  - DOMAIN-SUFFIX,jp,🇯🇵日本网站🇯🇵
 
 
   - GEOSITE,category-cryptocurrency,🪙加密货币🪙
@@ -88,9 +91,9 @@ rules:
 proxy-groups:
   - name: ⚡自动选择⚡
     type: url-test
-    url: https://www.cloudflare.com/cdn-cgi/trace
+    url: https://www.google.com/generate_204
     exclude-filter: RU|俄罗斯|🇷🇺
-    icon: https://www.clashverge.dev/assets/icons/speed.svg
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Speedtest.png
     interval: 300
     lazy: true
     timeout: 2000
@@ -102,8 +105,8 @@ proxy-groups:
   - name: 🧠人工智能🧠
     type: url-test
     url: https://chatgpt.com
-    exclude-filter: RU|俄罗斯|🇷🇺|HK|香港|🇭🇰|US|美国|🇺🇸
-    icon: https://www.clashverge.dev/assets/icons/chatgpt.svg
+    exclude-filter: RU|俄罗斯|🇷🇺    #|HK|香港|🇭🇰|US|美国|🇺🇸
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Bot.png
     interval: 300
     lazy: true
     timeout: 2000
@@ -115,8 +118,8 @@ proxy-groups:
   - name: 🌍国外媒体🌍
     type: url-test
     url: https://music.youtube.com
-    exclude-filter: RU|俄罗斯|🇷🇺|HK|香港|🇭🇰|VN|越南|🇻🇳|DE|德国|🇩🇪|MY|马来西亚|🇲🇾|KR|韩国|🇰🇷
-    icon: https://www.clashverge.dev/assets/icons/youtube.svg
+    exclude-filter: RU|俄罗斯|🇷🇺|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|KR|韩国|🇰🇷
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/YouTube_Music.png
     interval: 300
     lazy: true
     timeout: 2000
@@ -125,10 +128,11 @@ proxy-groups:
     proxies: []
 
 
-  - name: 🎌日本网站🎌
+  - name: 🇯🇵日本网站🇯🇵
     type: fallback
     url: https://special.dmm.com
     filter: JP|日本|🇯🇵
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Japan.png
     interval: 300
     lazy: true
     timeout: 2000
@@ -141,9 +145,11 @@ proxy-groups:
     type: url-test
     url: https://api.binance.com/api/v3/ping
     exclude-filter: RU|俄罗斯|🇷🇺|HK|香港|🇭🇰|US|美国|🇺🇸|CA|加拿大|🇨🇦
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Available_Alt.png
     interval: 300
     lazy: true
     timeout: 2000
     max-failed-times: 2
     tolerance: 50
     proxies: []
+
