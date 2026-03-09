@@ -40,6 +40,9 @@ dns:
     - https://dns.google/dns-query
 
 
+sniffer:
+  enable: false
+
 
 rules:
   - IP-CIDR,0.0.0.0/32,REJECT
