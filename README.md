@@ -1,109 +1,85 @@
 # WorkersSub 🚀
-
-基于 **Cloudflare Workers** 的 Clash / Mihomo 订阅覆写  
-
-
+基于 **Cloudflare Workers** 的 Clash订阅覆写和转换  
 ![Cloudflare Workers](https://img.shields.io/badge/Cloudflare%20Workers-%23F38020?style=flat&logo=cloudflare&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
 
 ## 🔥 功能亮点
-
-- 🔄 实时覆写上游订阅（vmess / vless / trojan / shadowsocks / hysteria / tuic 等全家桶）
-- ✏️ 自动修改返回头内的Content-Disposition来命名节点,解决强迫症  
-- ⚡ 用YAML自定义代理组配置,支持双向正则筛选节点    
-
+- 🔄 实时覆写上游订阅
+- 👌 支持自动填充订阅链接内的时间
+- ✏️ 自动修改返回头来命名节点,解决强迫症  
+- ⚡ 用YAML自定义代理组配置,支持双向正则筛选节点
+- ♻️ 支持sing-box,v2ray转clashmeta(demo)
 ## 🚀 极速部署
-
-### 方式一：GitHub 一键导入（最推荐）
-
-1. 先点右上角 **Fork** 本仓库 🌟,并按意愿修改配置
-2. 打开 [Cloudflare Dashboard](https://dash.cloudflare.com) → Workers & Pages
-3. 点击 **Create application** → **Workers** → **Import repository**
-4. 选择你 fork 的仓库 → **Import** → **Deploy** 就完事啦！🎉
-
-### 方式二：wrangler CLI 硬核玩家
-
-```bash
-npm install -g wrangler          # 没装过的先来一发
-wrangler login                   # 浏览器登录 Cloudflare
-wrangler dev                     # 本地调试（改代码实时看效果）
-wrangler deploy                  # 一键上线！
-```
+<a href="https://deploy.workers.cloudflare.com/?url=https://github.com/4evergr8/WorkersSub">
+    <img src="https://deploy.workers.cloudflare.com/button" alt="Deploy to Cloudflare Workers" style="height: 32px;"/>
+</a>  
 
 部署完你会得到类似这样的地址：
-
 ```
 https://your-worker-name.your-account.workers.dev
 ```
+## 🎯 食用方法
 
-## 🎯 怎么用？超简单！
-
-最常用格式：
+订阅转换格式：
 
 ```
-https://你的workers域名?links=https://上游机场订阅链接
+https://你的workers域名?clash=https://上游机场Clash订阅链接
+https://你的workers域名?v2ray=https://上游机场v2ray订阅链接
+https://你的workers域名?singbox=https://上游机场singbox订阅链接
+
 ```
-
-
-直接丢进 Clash系随便哪个客户端都行！😎
-
-
-
+如需替换日期仅需在参数后面加date,用yyyymmdd替换原链接内的日期,程序将自动填充当天日期,例:
+```
+https://你的workers域名?clashdate=https://xxx.com/yyyy/mm/yyyymmdd
+```
+最后将组合后的链接直接丢进 Clash系随便哪个客户端都行！😎
 ## ⚙️ 覆写规则示例,注意代理组内的exclude-filter和filter两项无法过滤手动写入的节点,仅作为程序过滤的依据
 
 ```YAML
 port: 7890
 socks-port: 7891
-mode: rule  #此项拥有默认值，默认为规则模式
-allow-lan: false  #允许其他设备经过 Clash 的代理端口访问互联网
-log-level: silent  #Clash 内核输出日志的等级，仅在控制台和控制页面输出
-ipv6: true  #是否允许内核接受 IPv6 流量
-disable-keep-alive: true  #禁用 TCP Keep Alive，在 Android 默认为 true
-unified-delay: true  #开启统一延迟时，会计算 RTT，以消除连接握手等带来的不同类型节点的延迟差异
-tcp-concurrent: true  #启用 TCP 并发连接，将会使用 dns 解析出的所有 IP 地址进行连接，使用第一个成功的连接
-geodata-mode: true  #更改 geoip 使用文件，mmdb 或者 dat，可选 true/false,true为 dat
-geodata-loader: standard  #GEO 文件加载模式
-geo-auto-update: true  #自动更新 GEO
-geo-update-interval: 24  #更新间隔，单位为小时
-geox-url:
-  geoip: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
-  geosite: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geosite.dat"
-  mmdb: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.metadb"
-  asn: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
-global-ua: clash.meta  #自定义外部资源下载时使用的的 UA，默认为 clash.meta
-etag-support: true  #外部资源下载的 ETag 支持，默认为 true
-
-
+mode: rule
+allow-lan: false
+log-level: silent
+ipv6: true
+disable-keep-alive: true
+unified-delay: true
+tcp-concurrent: true
+geodata-loader: memconservative
 dns:
-  enable: true  #是否启用，如为 false，则使用系统 DNS 解析
-  cache-algorithm: lru  #支持的算法：lru: Least Recently Used, 默认值 arc: Adaptive Replacement Cache
-  prefer-h3: true  #DOH 优先使用 http/3
-  listen: 0.0.0.0:1053  #DNS 服务监听，支持 udp, tcp
-  ipv6: true  #是否解析 IPV6, 如为 false, 则回应 AAAA 的空解析
-  enhanced-mode: fake-ip  #mihomo 的 DNS 处理模式
-  fake-ip-range: 198.18.0.1/16  #fakeip 下的 IP 段设置，tun 的默认 IPV4 地址 也使用此值作为参考
-  fake-ip-filter:  #fakeip 过滤，以下地址不会下发 fakeip 映射用于连接
-    - 'geosite:private'
-  fake-ip-filter-mode: blacklist  #可选 blacklist/whitelist，默认blacklist，whitelist 即只有匹配成功才返回 fake-ip
-  use-hosts: false  #是否回应配置中的 hosts，默认 true
-  use-system-hosts: true  #是否查询系统 hosts，默认 true
-  respect-rules: true  #dns 连接遵守路由规则，需配置 proxy-server-nameserver
-  default-nameserver:  #默认 DNS, 用于解析 DNS 服务器 的域名，必须为 IP, 可为加密 DNS
+  enable: true
+  cache-algorithm: lru
+  prefer-h3: true
+  listen: 0.0.0.0:1053
+  ipv6: true
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter-mode: blacklist
+  fake-ip-filter:
+    - geosite:private
+    - '*.lan'
+    - '*.local'
+  use-hosts: false
+  use-system-hosts: true
+  respect-rules: true
+  default-nameserver:
     - tls://1.12.12.12:853
     - tls://223.5.5.5:853
   nameserver-policy:
-    "geosite:private,cn,geolocation-cn": system
-    "geoip:cn": system
-  proxy-server-nameserver:  #代理节点域名解析服务器，仅用于解析代理节点的域名，如果不填则遵循 nameserver-policy、nameserver 和 fallback 的配置
+    geosite:private,cn,geolocation-cn: system
+  proxy-server-nameserver:
     - https://dns.alidns.com/dns-query
     - https://dns.pub/dns-query
-  direct-nameserver:  #用于 direct 出口域名解析的 DNS 服务器，如果不填则遵循 nameserver-policy、nameserver 和 fallback 的配置
+  direct-nameserver:
     - system
-  direct-nameserver-follow-policy: false  #是否遵循 nameserver-policy，默认为不遵守，仅当 direct-nameserver 不为空时生效
-  nameserver:  #默认的域名解析服务器
+  direct-nameserver-follow-policy: false
+  nameserver:
     - https://dns.cloudflare.com/dns-query
     - https://dns.google/dns-query
 
+
+sniffer:
+  enable: false
 
 
 rules:
@@ -113,17 +89,19 @@ rules:
   - GEOSITE,category-ads-all,REJECT
 
 
+  - DOMAIN-KEYWORD,teracloud,⚡自动选择⚡
+
+
   - GEOSITE,geolocation-cn,DIRECT
   - GEOSITE,private,DIRECT
-  - GEOIP,cn,DIRECT
 
 
   - GEOSITE,CATEGORY-AI-!CN,🧠人工智能🧠
 
 
-  - GEOSITE,DLSITE,🎌日本网站🎌
-  - DOMAIN,rss.4evergr8.workers.dev,🎌日本网站🎌
-  - DOMAIN-SUFFIX,jp,🎌日本网站🎌
+  - GEOSITE,DLSITE,🇯🇵日本网站🇯🇵
+  - DOMAIN,rss.4evergr8.workers.dev,🇯🇵日本网站🇯🇵
+  - DOMAIN-SUFFIX,jp,🇯🇵日本网站🇯🇵
 
 
   - GEOSITE,category-cryptocurrency,🪙加密货币🪙
@@ -142,9 +120,9 @@ rules:
 proxy-groups:
   - name: ⚡自动选择⚡
     type: url-test
-    url: https://www.cloudflare.com/cdn-cgi/trace
-    exclude-filter: RU|俄罗斯|🇷🇺
-    icon: https://www.clashverge.dev/assets/icons/speed.svg
+    url: https://web.telegram.org
+    exclude-filter: RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Speedtest.png
     interval: 300
     lazy: true
     timeout: 2000
@@ -156,8 +134,8 @@ proxy-groups:
   - name: 🧠人工智能🧠
     type: url-test
     url: https://chatgpt.com
-    exclude-filter: RU|俄罗斯|🇷🇺|HK|香港|🇭🇰|US|美国|🇺🇸
-    icon: https://www.clashverge.dev/assets/icons/chatgpt.svg
+    exclude-filter: RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷    #|HK|香港|🇭🇰|US|美国|🇺🇸
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Bot.png
     interval: 300
     lazy: true
     timeout: 2000
@@ -169,8 +147,8 @@ proxy-groups:
   - name: 🌍国外媒体🌍
     type: url-test
     url: https://music.youtube.com
-    exclude-filter: RU|俄罗斯|🇷🇺|HK|香港|🇭🇰|VN|越南|🇻🇳|DE|德国|🇩🇪|MY|马来西亚|🇲🇾|KR|韩国|🇰🇷
-    icon: https://www.clashverge.dev/assets/icons/youtube.svg
+    exclude-filter: RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷|VN|越南|🇻🇳|MY|马来西亚|🇲🇾
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/YouTube_Music.png
     interval: 300
     lazy: true
     timeout: 2000
@@ -179,10 +157,11 @@ proxy-groups:
     proxies: []
 
 
-  - name: 🎌日本网站🎌
+  - name: 🇯🇵日本网站🇯🇵
     type: fallback
     url: https://special.dmm.com
     filter: JP|日本|🇯🇵
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Japan.png
     interval: 300
     lazy: true
     timeout: 2000
@@ -195,6 +174,7 @@ proxy-groups:
     type: url-test
     url: https://api.binance.com/api/v3/ping
     exclude-filter: RU|俄罗斯|🇷🇺|HK|香港|🇭🇰|US|美国|🇺🇸|CA|加拿大|🇨🇦
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Available_Alt.png
     interval: 300
     lazy: true
     timeout: 2000
@@ -204,7 +184,3 @@ proxy-groups:
 
 ```
 
-
-
-
-喜欢的话点个 **Star** 支持一下吧～ ⭐✨  
