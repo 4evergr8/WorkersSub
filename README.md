@@ -36,9 +36,18 @@ https://你的workers域名?clashdate=https://xxx.com/yyyy/mm/yyyymmdd
 ## ⚙️ 覆写规则示例,注意代理组内的exclude-filter和filter两项无法过滤手动写入的节点,仅作为程序过滤的依据
 
 ```YAML
-port: 7890
-socks-port: 7891
+tun:
+  enable: true
+  stack: system
+  device: utun0
+  auto-route: true
+  auto-detect-interface: true
+  strict-route: true
+
+
 mode: rule
+external-controller: 127.0.0.1:9090
+external-ui: ./metacubexd
 allow-lan: false
 log-level: silent
 ipv6: true
@@ -46,136 +55,110 @@ disable-keep-alive: true
 unified-delay: true
 tcp-concurrent: true
 geodata-loader: memconservative
+
+
 dns:
   enable: true
   cache-algorithm: lru
-  prefer-h3: true
+  prefer-h3: false
   listen: 0.0.0.0:1053
   ipv6: true
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
   fake-ip-filter-mode: blacklist
   fake-ip-filter:
+    - geosite:cn
+    - geosite:geolocation-cn
     - geosite:private
-    - '*.lan'
-    - '*.local'
   use-hosts: false
   use-system-hosts: true
-  respect-rules: true
   default-nameserver:
     - tls://1.12.12.12:853
     - tls://223.5.5.5:853
-  nameserver-policy:
-    geosite:private,cn,geolocation-cn: system
-  proxy-server-nameserver:
-    - https://dns.alidns.com/dns-query
-    - https://dns.pub/dns-query
-  direct-nameserver:
-    - system
-  direct-nameserver-follow-policy: false
   nameserver:
-    - https://dns.cloudflare.com/dns-query
-    - https://dns.google/dns-query
-
-
-sniffer:
-  enable: false
-
+    - https://dns.alidns.com/dns-query#h3=true
+    - https://doh.pub/dns-query
 
 rules:
-  - IP-CIDR,0.0.0.0/32,REJECT
+  - IP-CIDR,0.0.0.0/32,REJECT,no-resolve
   - DOMAIN-REGEX,^ad\..*,REJECT
   - DOMAIN-REGEX,.*\.ad\..*,REJECT
   - GEOSITE,category-ads-all,REJECT
 
-
-  - DOMAIN-KEYWORD,teracloud,⚡自动选择⚡
-
-
+  - GEOSITE,cn,DIRECT
   - GEOSITE,geolocation-cn,DIRECT
   - GEOSITE,private,DIRECT
-
+  - GEOIP,cn,DIRECT,no-resolve
+  - GEOIP,private,DIRECT,no-resolve
 
   - GEOSITE,CATEGORY-AI-!CN,🧠人工智能🧠
 
-
-  - GEOSITE,DLSITE,🇯🇵日本网站🇯🇵
-  - DOMAIN,rss.4evergr8.workers.dev,🇯🇵日本网站🇯🇵
   - DOMAIN-SUFFIX,jp,🇯🇵日本网站🇯🇵
-
+  - GEOSITE,DLSITE,🇯🇵日本网站🇯🇵
+  - GEOSITE,DMM,🇯🇵日本网站🇯🇵
 
   - GEOSITE,category-cryptocurrency,🪙加密货币🪙
 
-
-
   - GEOSITE,youtube,🌍国外媒体🌍
 
-
-
   - MATCH,⚡自动选择⚡
-
-
 
 
 proxy-groups:
   - name: ⚡自动选择⚡
     type: url-test
     url: https://web.telegram.org
-    exclude-filter: RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
+    exclude-filter: 直连|订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Speedtest.png
-    interval: 300
-    lazy: true
+    interval: 600
+    lazy: false
     timeout: 2000
     max-failed-times: 2
     tolerance: 50
     proxies: []
-
 
   - name: 🧠人工智能🧠
     type: url-test
     url: https://chatgpt.com
-    exclude-filter: RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷    #|HK|香港|🇭🇰|US|美国|🇺🇸
+    exclude-filter: 直连|订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|HK|香港|🇭🇰   #|US|美国|🇺🇸
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Bot.png
-    interval: 300
+    interval: 617
     lazy: true
     timeout: 2000
     max-failed-times: 2
     tolerance: 50
     proxies: []
-
 
   - name: 🌍国外媒体🌍
     type: url-test
     url: https://music.youtube.com
-    exclude-filter: RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷|VN|越南|🇻🇳|MY|马来西亚|🇲🇾
+    exclude-filter: 直连|订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|🇷🇺|HK|香港|🇭🇰
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/YouTube_Music.png
-    interval: 300
+    interval: 631
     lazy: true
     timeout: 2000
     max-failed-times: 2
     tolerance: 50
     proxies: []
-
 
   - name: 🇯🇵日本网站🇯🇵
     type: fallback
     url: https://special.dmm.com
     filter: JP|日本|🇯🇵
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Japan.png
-    interval: 300
+    interval: 647
     lazy: true
     timeout: 2000
     max-failed-times: 2
     tolerance: 50
     proxies: []
 
-
   - name: 🪙加密货币🪙
     type: url-test
     url: https://api.binance.com/api/v3/ping
-    exclude-filter: RU|俄罗斯|🇷🇺|HK|香港|🇭🇰|US|美国|🇺🇸|CA|加拿大|🇨🇦
+    exclude-filter: 直连|订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|HK|香港|🇭🇰|US|美国|🇺🇸|CA|加拿大|🇨🇦
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Available_Alt.png
-    interval: 300
+    interval: 659
     lazy: true
     timeout: 2000
     max-failed-times: 2
