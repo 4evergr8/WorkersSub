@@ -87,6 +87,7 @@ dns:
 
 rules:
   - GEOSITE,category-ads-all,REJECT-DROP
+  - IP-CIDR,0.0.0.0/32,REJECT-DROP,no-resolve
 
   - GEOSITE,cn,DIRECT
   - GEOSITE,geolocation-cn,DIRECT
