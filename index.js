@@ -13,6 +13,7 @@ export default {
         const yyyy = now.getFullYear().toString();
         const mm = String(now.getMonth() + 1).padStart(2, '0');
         const dd = String(now.getDate()).padStart(2, '0');
+        const raw = firstValue
 
         if (firstKey.includes('date')) {
             firstValue = firstValue
@@ -57,7 +58,7 @@ export default {
         const out = buildConfig(baseConfig, proxies);
 
         // ===== 6. 设置返回头 =====
-        const headers = setHeaders(upstreamHeaders, firstValue);
+        const headers = setHeaders(upstreamHeaders, firstValue,raw);
         return new Response(out, { status: 200, headers });
     }
 };
@@ -82,7 +83,7 @@ export function buildConfig(baseConfig, proxies) {
 }
 
 // ===== 设置返回头 =====
-export function setHeaders(upstreamHeaders, link) {
+export function setHeaders(upstreamHeaders, link,raw) {
     const cd = upstreamHeaders.get('Content-Disposition');
     let baseName;
 
@@ -105,7 +106,7 @@ export function setHeaders(upstreamHeaders, link) {
 
     // 3. 对 URL 生成短哈希，确保不同 URL 不重复
     const hash = (() => {
-        let h = 0, s = link;
+        let h = 0, s = raw;
         for (let i = 0; i < s.length; i++) {
             h = (h << 5) - h + s.charCodeAt(i);
             h |= 0;
