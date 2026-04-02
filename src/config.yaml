@@ -22,13 +22,43 @@ geox-url:
 
 tun:
   enable: true
-  stack: gvisor
-  device: tun0
+  stack: "gvisor"
+  device: "tun0"
   auto-route: true
   auto-detect-interface: true
   strict-route: true
-
-
+  include-package:
+    - "a.forevergreat.atoolbox"
+    - "com.google.android.apps.authenticator2"
+    - "com.radolyn.ayugram"
+    - "com.x8bit.bitwarden"
+    - "com.openai.chatgpt"
+    - "com.android.chrome"
+    - "com.follow.clash"
+    - "com.google.android.inputmethod.latin"
+    - "com.android.vending"
+    - "com.google.android.gms"
+    - "com.google.android.gsf"
+    - "ai.x.grok"
+    - "com.google.android.keep"
+    - "me.weishu.kernelsu"
+    - "a.forevergreat.mihomoroot"
+    - "com.mixplorer"
+    - "com.piyush.music"
+    - "com.microsoft.office.outlook"
+    - "com.github.pacalini.pica_comic"
+    - "com.pikcloud.pikpak"
+    - "me.ash.reader"
+    - "io.github.chsbuffer.revancedxposed"
+    - "ru.dahl.messenger"
+    - "com.termux"
+    - "org.telegram.group"
+    - "com.google.android.youtube"
+    - "com.google.android.apps.youtube.music"
+    - "com.binance.dev"
+    - "im.fdx.v2ex"
+    - "com.google.android.apps.photos"
+    - "org.adaway"
 
 
 dns:
@@ -72,6 +102,8 @@ rules:
   - GEOSITE,DLSITE,🇯🇵日本网站🇯🇵
   - GEOSITE,DMM,🇯🇵日本网站🇯🇵
   - DOMAIN,rss.4evergr8.workers.dev,🇯🇵日本网站🇯🇵
+
+  - GEOSITE,category-cryptocurrency,🪙加密货币🪙
 
   - GEOSITE,youtube,🌍国外媒体🌍
 
@@ -120,6 +152,17 @@ proxy-groups:
     filter: JP|日本|🇯🇵
     icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Japan.png
     interval: 647
+    lazy: true
+    timeout: 2000
+    max-failed-times: 2
+    proxies: []
+
+  - name: 🪙加密货币🪙
+    type: url-test
+    url: https://api.binance.com/api/v3/ping
+    exclude-filter: 直连|订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|HK|香港|🇭🇰|US|美国|🇺🇸|CA|加拿大|🇨🇦
+    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Available_Alt.png
+    interval: 659
     lazy: true
     timeout: 2000
     max-failed-times: 2
