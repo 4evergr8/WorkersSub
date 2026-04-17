@@ -4,9 +4,9 @@ external-ui: ./metacubexd
 allow-lan: false
 log-level: warning
 ipv6: true
-keep-alive-idle: 0
-keep-alive-interval: 30
-disable-keep-alive: true
+keep-alive-idle: 15
+keep-alive-interval: 10
+disable-keep-alive: false
 unified-delay: true
 tcp-concurrent: true
 geodata-loader: memconservative
@@ -18,7 +18,11 @@ geodata-mode: true
 geox-url:
   geoip: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
   geosite: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
-
+profile:
+  store-selected: false
+  # 储存 API 对策略组的选择，以供下次启动时使用
+  store-fake-ip: true
+  # 储存 fakeip 映射表，域名再次发生连接时，使用原有映射地址
 
 tun:
   enable: true
@@ -81,89 +85,136 @@ dns:
   nameserver:
     - https://dns.alidns.com/dns-query#h3=true
     - https://doh.pub/dns-query
-  proxy-server-nameserver:
-    - https://cloudflare-dns.com/dns-query#h3=true
-    - https://dns.google/dns-query#h3=true
-    - tls://1.1.1.1:853
-    - tls://8.8.8.8:853
 
 rules:
-  - GEOSITE,category-ads-all,REJECT-DROP
-  - IP-CIDR,0.0.0.0/32,REJECT-DROP,no-resolve
+  - GEOSITE,category-ads-all,REJECT
+  - IP-CIDR,0.0.0.0/32,REJECT,no-resolve
 
   - GEOSITE,cn,DIRECT
+  - GEOSITE,googlefcm,DIRECT
   - GEOSITE,private,DIRECT
   - GEOIP,cn,DIRECT,no-resolve
   - GEOIP,private,DIRECT,no-resolve
 
   - GEOSITE,CATEGORY-AI-!CN,🧠人工智能🧠
 
-  - DOMAIN-SUFFIX,jp,🇯🇵日本网站🇯🇵
-  - GEOSITE,DLSITE,🇯🇵日本网站🇯🇵
-  - GEOSITE,DMM,🇯🇵日本网站🇯🇵
-  - DOMAIN,rss.4evergr8.workers.dev,🇯🇵日本网站🇯🇵
-
   - GEOSITE,category-cryptocurrency,🪙加密货币🪙
 
   - GEOSITE,youtube,🌍国外媒体🌍
 
-  - MATCH,⚡自动选择⚡
+  - MATCH,📌节点选择📌
 
 
 proxy-groups:
-  - name: ⚡自动选择⚡
-    type: url-test
+  - name: 📌节点选择📌
+    type: select
     url: https://www.google.com
-    exclude-filter: 直连|订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Speedtest.png
-    interval: 600
-    lazy: false
+    expected-status: 200
+    #icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Speedtest.png
+    interval: 300
     timeout: 2000
-    max-failed-times: 2
-    tolerance: 50
-    proxies: []
+    max-failed-times: 3
+    proxies:
+      - ⚡自动选择⚡
+      - ⚖️负载均衡⚖️
+      - 🇯🇵日本节点🇯🇵
+      - 🇭🇰香港节点🇭🇰
+      - 🇺🇸美国节点🇺🇸
 
   - name: 🧠人工智能🧠
     type: url-test
-    url: https://chatgpt.com
-    exclude-filter: 直连|订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|HK|香港|🇭🇰   #|US|美国|🇺🇸
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Bot.png
-    interval: 617
-    lazy: true
+    url: https://chatgpt.com/
+    expected-status: 200
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺 #|HK|香港|🇭🇰   #|US|美国|🇺🇸
+    #icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Bot.png
+    interval: 300
     timeout: 2000
-    max-failed-times: 2
+    max-failed-times: 3
     tolerance: 50
     proxies: []
 
   - name: 🌍国外媒体🌍
-    type: url-test
-    url: https://music.youtube.com
-    exclude-filter: 直连|订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|🇷🇺|HK|香港|🇭🇰
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/YouTube_Music.png
-    interval: 631
-    lazy: true
+    type: load-balance
+    strategy: consistent-hashing
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷  #|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|🇷🇺
+    #icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/YouTube_Music.png
+    interval: 300
     timeout: 2000
-    max-failed-times: 2
-    proxies: []
-
-  - name: 🇯🇵日本网站🇯🇵
-    type: fallback
-    url: https://special.dmm.com
-    filter: JP|日本|🇯🇵
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Japan.png
-    interval: 647
-    lazy: true
-    timeout: 2000
-    max-failed-times: 2
+    max-failed-times: 3
+    tolerance: 50
     proxies: []
 
   - name: 🪙加密货币🪙
     type: url-test
     url: https://api.binance.com/api/v3/ping
-    exclude-filter: 直连|订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|HK|香港|🇭🇰|US|美国|🇺🇸|CA|加拿大|🇨🇦
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Available_Alt.png
-    interval: 659
-    lazy: true
+    expected-status: 200
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|CA|加拿大|🇨🇦 #|US|美国|🇺🇸
+    #icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Available_Alt.png
+    interval: 300
     timeout: 2000
-    max-failed-times: 2
+    max-failed-times: 3
+    tolerance: 50
     proxies: []
+
+  - name: ⚡自动选择⚡
+    type: url-test
+    url: https://www.google.com
+    expected-status: 200
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
+    #icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Speedtest.png
+    interval: 300
+    timeout: 2000
+    max-failed-times: 3
+    tolerance: 50
+    proxies: []
+
+  - name: 🇯🇵日本节点🇯🇵
+    type: url-test
+    url: https://www.google.com
+    expected-status: 200
+    filter: JP|日本|🇯🇵
+    #icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Japan.png
+    interval: 300
+    timeout: 2000
+    max-failed-times: 3
+    tolerance: 50
+    proxies: [ ]
+
+  - name: 🇭🇰香港节点🇭🇰
+    type: url-test
+    url: https://www.google.com
+    expected-status: 200
+    filter: HK|香港|🇭🇰
+    #icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Hong_Kong.png
+    interval: 300
+    timeout: 2000
+    max-failed-times: 3
+    tolerance: 50
+    proxies: [ ]
+
+  - name: 🇺🇸美国节点🇺🇸
+    type: url-test
+    url: https://www.google.com
+    expected-status: 200
+    filter: US|美国|🇺🇸
+    #icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/United_States.png
+    interval: 300
+    timeout: 2000
+    max-failed-times: 3
+    tolerance: 50
+    proxies: [ ]
+
+  - name: ⚖️负载均衡⚖️
+    type: load-balance
+    strategy: consistent-hashing
+    url: https://www.google.com
+    expected-status: 200
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
+    #icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Speedtest.png
+    interval: 300
+    timeout: 2000
+    max-failed-times: 3
+    tolerance: 50
+    proxies: [ ]
+
+
