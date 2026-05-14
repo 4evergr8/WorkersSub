@@ -20,9 +20,7 @@ geox-url:
   geosite: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
 profile:
   store-selected: false
-  # 储存 API 对策略组的选择，以供下次启动时使用
   store-fake-ip: true
-  # 储存 fakeip 映射表，域名再次发生连接时，使用原有映射地址
 
 tun:
   enable: true
@@ -110,10 +108,10 @@ proxy-groups:
     type: select
     url: https://www.google.com
     expected-status: 200
-    #icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Speedtest.png
-    interval: 300
+    interval: 600
     timeout: 2000
     max-failed-times: 3
+    include-all: true
     proxies:
       - ⚡自动选择⚡
       - ⚖️负载均衡⚖️
@@ -125,83 +123,83 @@ proxy-groups:
     type: url-test
     url: https://chatgpt.com/
     expected-status: 200
-    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺 #|HK|香港|🇭🇰   #|US|美国|🇺🇸
-    #icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Bot.png
-    interval: 300
+    interval: 600
     timeout: 2000
     max-failed-times: 3
     tolerance: 50
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺 #|HK|香港|🇭🇰|US|美国|🇺🇸
+    include-all: true
     proxies: []
 
   - name: 🌍国外媒体🌍
     type: load-balance
     strategy: consistent-hashing
-    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷  #|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|🇷🇺
-    #icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/YouTube_Music.png
-    interval: 300
+    interval: 600
     timeout: 2000
     max-failed-times: 3
     tolerance: 50
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷  #|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|🇷🇺
+    include-all: true
     proxies: []
 
   - name: 🪙加密货币🪙
     type: url-test
     url: https://api.binance.com/api/v3/ping
     expected-status: 200
-    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|CA|加拿大|🇨🇦 #|US|美国|🇺🇸
-    #icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Available_Alt.png
-    interval: 300
+    interval: 600
     timeout: 2000
     max-failed-times: 3
     tolerance: 50
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|CA|加拿大|🇨🇦 #|US|美国|🇺🇸
+    include-all: true
     proxies: []
 
   - name: ⚡自动选择⚡
     type: url-test
     url: https://www.google.com
     expected-status: 200
-    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
-    #icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Speedtest.png
-    interval: 300
+    interval: 600
     timeout: 2000
     max-failed-times: 3
     tolerance: 50
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
+    include-all: true
     proxies: []
 
   - name: 🇯🇵日本节点🇯🇵
     type: url-test
     url: https://www.google.com
     expected-status: 200
-    filter: JP|日本|🇯🇵
-    #icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Japan.png
-    interval: 300
+    interval: 600
     timeout: 2000
     max-failed-times: 3
     tolerance: 50
+    filter: JP|日本|🇯🇵
+    include-all: true
     proxies: [ ]
 
   - name: 🇭🇰香港节点🇭🇰
     type: url-test
     url: https://www.google.com
     expected-status: 200
-    filter: HK|香港|🇭🇰
-    #icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Hong_Kong.png
-    interval: 300
+    interval: 600
     timeout: 2000
     max-failed-times: 3
     tolerance: 50
+    filter: HK|香港|🇭🇰
+    include-all: true
     proxies: [ ]
 
   - name: 🇺🇸美国节点🇺🇸
     type: url-test
     url: https://www.google.com
     expected-status: 200
-    filter: US|美国|🇺🇸
-    #icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/United_States.png
-    interval: 300
+    interval: 600
     timeout: 2000
     max-failed-times: 3
     tolerance: 50
+    filter: US|美国|🇺🇸
+    include-all: true
     proxies: [ ]
 
   - name: ⚖️负载均衡⚖️
@@ -209,12 +207,12 @@ proxy-groups:
     strategy: consistent-hashing
     url: https://www.google.com
     expected-status: 200
-    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
-    #icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Speedtest.png
-    interval: 300
     timeout: 2000
     max-failed-times: 3
+    interval: 600
     tolerance: 50
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
+    include-all: true
     proxies: [ ]
 
 
