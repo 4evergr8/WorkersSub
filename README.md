@@ -5,9 +5,8 @@
 
 ## 🔥 功能亮点
 - 🔄 实时覆写上游订阅
-- 👌 支持自动填充订阅链接内的时间
 - ✏️ 自动修改返回头来命名节点,解决强迫症  
-- ⚡ 用YAML自定义代理组配置,支持双向正则筛选节点
+- ⚡ 用YAML自定义代理组配置
 - ♻️ 支持sing-box,v2ray转clashmeta(demo)
 ## 🚀 极速部署
 <a href="https://deploy.workers.cloudflare.com/?url=https://github.com/4evergr8/WorkersSub">
@@ -23,38 +22,46 @@ https://your-worker-name.your-account.workers.dev
 订阅转换格式：
 
 ```
-https://你的workers域名?clash=https://上游机场Clash订阅链接
-https://你的workers域名?v2ray=https://上游机场v2ray订阅链接
-https://你的workers域名?singbox=https://上游机场singbox订阅链接
-
-```
-如需替换日期仅需在参数后面加date,用yyyymmdd替换原链接内的日期,程序将自动填充当天日期,例:
-```
-https://你的workers域名?clashdate=https://xxx.com/yyyy/mm/yyyymmdd
+https://你的workers域名/?clash=https://上游机场Clash订阅链接
+https://你的workers域名/?v2ray=https://上游机场v2ray订阅链接
+https://你的workers域名/?singbox=https://上游机场singbox订阅链接
 ```
 最后将组合后的链接直接丢进 Clash系随便哪个客户端都行！😎
-## ⚙️ 覆写规则示例,注意代理组内的exclude-filter和filter两项无法过滤手动写入的节点,仅作为程序过滤的依据
+## ⚙️ 自用覆写规则示例
 
 ```YAML
-tun:
-  enable: true
-  stack: system
-  device: utun0
-  auto-route: true
-  auto-detect-interface: true
-  strict-route: true
-
-
 mode: rule
 external-controller: 127.0.0.1:9090
 external-ui: ./metacubexd
 allow-lan: false
-log-level: silent
+log-level: warning
 ipv6: true
-disable-keep-alive: true
+keep-alive-idle: 15
+keep-alive-interval: 10
+disable-keep-alive: false
 unified-delay: true
 tcp-concurrent: true
 geodata-loader: memconservative
+find-process-mode: off
+geo-auto-update: true
+geo-update-interval: 24
+etag-support: true
+geodata-mode: true
+geox-url:
+  geoip: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
+  geosite: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
+profile:
+  store-selected: false
+  store-fake-ip: true
+
+tun:
+  enable: true
+  stack: "gvisor"
+  device: "tun0"
+  auto-route: true
+  auto-detect-interface: true
+  strict-route: true
+
 
 
 dns:
@@ -68,7 +75,6 @@ dns:
   fake-ip-filter-mode: blacklist
   fake-ip-filter:
     - geosite:cn
-    - geosite:geolocation-cn
     - geosite:private
   use-hosts: false
   use-system-hosts: true
@@ -80,90 +86,137 @@ dns:
     - https://doh.pub/dns-query
 
 rules:
-  - IP-CIDR,0.0.0.0/32,REJECT,no-resolve
-  - DOMAIN-REGEX,^ad\..*,REJECT
-  - DOMAIN-REGEX,.*\.ad\..*,REJECT
   - GEOSITE,category-ads-all,REJECT
+  - IP-CIDR,0.0.0.0/32,REJECT,no-resolve
 
   - GEOSITE,cn,DIRECT
-  - GEOSITE,geolocation-cn,DIRECT
+  - GEOSITE,googlefcm,DIRECT
   - GEOSITE,private,DIRECT
   - GEOIP,cn,DIRECT,no-resolve
   - GEOIP,private,DIRECT,no-resolve
 
   - GEOSITE,CATEGORY-AI-!CN,🧠人工智能🧠
 
-  - DOMAIN-SUFFIX,jp,🇯🇵日本网站🇯🇵
-  - GEOSITE,DLSITE,🇯🇵日本网站🇯🇵
-  - GEOSITE,DMM,🇯🇵日本网站🇯🇵
-
   - GEOSITE,category-cryptocurrency,🪙加密货币🪙
 
   - GEOSITE,youtube,🌍国外媒体🌍
 
-  - MATCH,⚡自动选择⚡
+  - MATCH,📌节点选择📌
 
 
 proxy-groups:
-  - name: ⚡自动选择⚡
-    type: url-test
-    url: https://web.telegram.org
-    exclude-filter: 直连|订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Speedtest.png
+  - name: 📌节点选择📌
+    type: select
+    url: https://www.google.com
+    expected-status: 200
     interval: 600
     lazy: false
-    timeout: 2000
-    max-failed-times: 2
-    tolerance: 50
-    proxies: []
+    timeout: 1000
+    max-failed-times: 3
+    include-all: true
+    proxies:
+      - ⚡自动选择⚡
+      - ⚖️负载均衡⚖️
+      - 🇯🇵日本节点🇯🇵
+      - 🇭🇰香港节点🇭🇰
+      - 🇺🇸美国节点🇺🇸
 
   - name: 🧠人工智能🧠
     type: url-test
-    url: https://chatgpt.com
-    exclude-filter: 直连|订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|HK|香港|🇭🇰   #|US|美国|🇺🇸
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Bot.png
-    interval: 617
-    lazy: true
-    timeout: 2000
-    max-failed-times: 2
-    tolerance: 50
+    url: https://api.openai.com/v1/models
+    expected-status: 401
+    interval: 300
+    timeout: 1000
+    max-failed-times: 3
+    tolerance: 200
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺 #|HK|香港|🇭🇰|US|美国|🇺🇸
+    include-all: true
     proxies: []
 
   - name: 🌍国外媒体🌍
-    type: url-test
+    type: load-balance
+    strategy: consistent-hashing
     url: https://music.youtube.com
-    exclude-filter: 直连|订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|🇷🇺|HK|香港|🇭🇰
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/YouTube_Music.png
-    interval: 631
-    lazy: true
-    timeout: 2000
-    max-failed-times: 2
-    tolerance: 50
-    proxies: []
-
-  - name: 🇯🇵日本网站🇯🇵
-    type: fallback
-    url: https://special.dmm.com
-    filter: JP|日本|🇯🇵
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Japan.png
-    interval: 647
-    lazy: true
-    timeout: 2000
-    max-failed-times: 2
-    tolerance: 50
+    expected-status: 200
+    interval: 300
+    timeout: 1000
+    max-failed-times: 3
+    tolerance: 200
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷  #|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|🇷🇺
+    include-all: true
     proxies: []
 
   - name: 🪙加密货币🪙
     type: url-test
     url: https://api.binance.com/api/v3/ping
-    exclude-filter: 直连|订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|HK|香港|🇭🇰|US|美国|🇺🇸|CA|加拿大|🇨🇦
-    icon: https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Dark/Available_Alt.png
-    interval: 659
-    lazy: true
-    timeout: 2000
-    max-failed-times: 2
-    tolerance: 50
+    expected-status: 200
+    interval: 300
+    timeout: 1000
+    max-failed-times: 3
+    tolerance: 200
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|CA|加拿大|🇨🇦|US|美国|🇺🇸
+    include-all: true
     proxies: []
 
+  - name: ⚡自动选择⚡
+    type: url-test
+    url: https://www.google.com
+    expected-status: 200
+    interval: 300
+    timeout: 1000
+    max-failed-times: 3
+    tolerance: 200
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
+    include-all: true
+    proxies: []
+
+  - name: 🇯🇵日本节点🇯🇵
+    type: url-test
+    url: https://www.dlsite.com
+    expected-status: 200
+    interval: 300
+    timeout: 1000
+    max-failed-times: 3
+    tolerance: 200
+    filter: JP|日本|🇯🇵
+    include-all: true
+    proxies: [ ]
+
+  - name: 🇭🇰香港节点🇭🇰
+    type: url-test
+    url: https://www.google.com
+    expected-status: 200
+    interval: 300
+    timeout: 1000
+    max-failed-times: 3
+    tolerance: 200
+    filter: HK|香港|🇭🇰
+    include-all: true
+    proxies: [ ]
+
+  - name: 🇺🇸美国节点🇺🇸
+    type: url-test
+    url: https://www.google.com
+    expected-status: 200
+    interval: 300
+    timeout: 1000
+    max-failed-times: 3
+    tolerance: 200
+    filter: US|美国|🇺🇸
+    include-all: true
+    proxies: [ ]
+
+  - name: ⚖️负载均衡⚖️
+    type: load-balance
+    strategy: round-robin
+    url: https://www.google.com
+    expected-status: 200
+    timeout: 1000
+    max-failed-times: 3
+    interval: 300
+    tolerance: 200
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
+    include-all: true
+    proxies: [ ]
 ```
 
