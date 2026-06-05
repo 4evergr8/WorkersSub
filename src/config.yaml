@@ -77,7 +77,6 @@ proxy-groups:
     type: select
     url: http://www.google.com/generate_204
     interval: 600
-    lazy: false
     timeout: 2000
     max-failed-times: 3
     include-all: true
@@ -91,7 +90,6 @@ proxy-groups:
     type: url-test
     url: http://www.google.com/generate_204
     interval: 600
-    lazy: false
     timeout: 2000
     max-failed-times: 3
     tolerance: 100
