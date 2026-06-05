@@ -75,28 +75,38 @@ rules:
 proxy-groups:
   - name: 📌节点选择📌
     type: select
-    url: https://www.google.com
-    expected-status: 200
+    url: http://www.google.com/generate_204
     interval: 600
     lazy: false
-    timeout: 1000
+    timeout: 2000
     max-failed-times: 3
     include-all: true
     proxies:
       - ⚡自动选择⚡
       - ⚖️负载均衡⚖️
-      - 🇯🇵日本节点🇯🇵
-      - 🇭🇰香港节点🇭🇰
-      - 🇺🇸美国节点🇺🇸
+      - 🇯🇵日韩节点🇯🇵
+      - 🇭🇰港台节点🇭🇰
+
+  - name: ⚡自动选择⚡
+    type: url-test
+    url: http://www.google.com/generate_204
+    interval: 600
+    lazy: false
+    timeout: 2000
+    max-failed-times: 3
+    tolerance: 100
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
+    include-all: true
+    proxies: []
 
   - name: 🧠人工智能🧠
     type: url-test
-    url: https://api.openai.com/v1/models
+    url: http://api.openai.com/v1/models
     expected-status: 401
-    interval: 300
-    timeout: 1000
+    interval: 600
+    timeout: 2000
     max-failed-times: 3
-    tolerance: 200
+    tolerance: 100
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺 #|HK|香港|🇭🇰|US|美国|🇺🇸
     include-all: true
     proxies: []
@@ -104,85 +114,58 @@ proxy-groups:
   - name: 🌍国外媒体🌍
     type: load-balance
     strategy: consistent-hashing
-    url: https://music.youtube.com
-    expected-status: 200
-    interval: 300
-    timeout: 1000
+    url: http://music.youtube.com
+    interval: 600
+    timeout: 2000
     max-failed-times: 3
-    tolerance: 200
+    tolerance: 100
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷  #|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|🇷🇺
     include-all: true
     proxies: []
 
   - name: 🪙加密货币🪙
     type: url-test
-    url: https://api.binance.com/api/v3/ping
+    url: http://api.binance.com/api/v3/ping
     expected-status: 200
-    interval: 300
-    timeout: 1000
+    interval: 600
+    timeout: 2000
     max-failed-times: 3
-    tolerance: 200
+    tolerance: 100
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|CA|加拿大|🇨🇦|US|美国|🇺🇸
     include-all: true
     proxies: []
 
-  - name: ⚡自动选择⚡
+  - name: 🇯🇵日韩节点🇯🇵
     type: url-test
-    url: https://www.google.com
-    expected-status: 200
-    interval: 300
-    timeout: 1000
+    url: http://www.dlsite.com
+    interval: 600
+    timeout: 2000
     max-failed-times: 3
-    tolerance: 200
-    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
-    include-all: true
-    proxies: []
-
-  - name: 🇯🇵日本节点🇯🇵
-    type: url-test
-    url: https://www.dlsite.com
-    expected-status: 200
-    interval: 300
-    timeout: 1000
-    max-failed-times: 3
-    tolerance: 200
-    filter: JP|日本|🇯🇵
+    tolerance: 100
+    filter: JP|日本|🇯🇵|KR|韩国|🇰🇷
     include-all: true
     proxies: [ ]
 
-  - name: 🇭🇰香港节点🇭🇰
+  - name: 🇭🇰港台节点🇭🇰
     type: url-test
-    url: https://www.google.com
-    expected-status: 200
-    interval: 300
-    timeout: 1000
+    url: http://www.google.com/generate_204
+    interval: 600
+    timeout: 2000
     max-failed-times: 3
-    tolerance: 200
-    filter: HK|香港|🇭🇰
+    tolerance: 100
+    filter: HK|香港|🇭🇰|TW|台湾|🇹🇼
     include-all: true
     proxies: [ ]
 
-  - name: 🇺🇸美国节点🇺🇸
-    type: url-test
-    url: https://www.google.com
-    expected-status: 200
-    interval: 300
-    timeout: 1000
-    max-failed-times: 3
-    tolerance: 200
-    filter: US|美国|🇺🇸
-    include-all: true
-    proxies: [ ]
 
   - name: ⚖️负载均衡⚖️
     type: load-balance
     strategy: round-robin
-    url: https://www.google.com
-    expected-status: 200
-    timeout: 1000
+    url: http://www.google.com/generate_204
+    timeout: 2000
     max-failed-times: 3
-    interval: 300
-    tolerance: 200
+    interval: 600
+    tolerance: 100
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
     include-all: true
     proxies: [ ]
