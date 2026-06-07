@@ -1,12 +1,5 @@
 name = "sub"
-main = "index.js"
-compatibility_date = "2025-03-12"
-
-[observability.logs]
-enabled = true
-
-[assets]
-directory = "./src"
-binding = "ASSETS"
-#npx --yes wrangler@latest deploy
+main = "./src/_worker.js"
+compatibility_date = "2026-06-07"
+#npx --yes wrangler@latest deploy --outdir dist
 
