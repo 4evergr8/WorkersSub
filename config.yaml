@@ -81,8 +81,8 @@ proxy-groups:
     max-failed-times: 3
     include-all: true
     proxies:
-      - ⚡自动选择⚡
       - ⚖️负载均衡⚖️
+      - ⚡自动选择⚡
       - 🇯🇵日韩节点🇯🇵
       - 🇭🇰港台节点🇭🇰
 
