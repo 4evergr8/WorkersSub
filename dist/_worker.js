@@ -2969,7 +2969,7 @@ ipv6: true
 keep-alive-idle: 15
 keep-alive-interval: 10
 disable-keep-alive: false
-unified-delay: true
+unified-delay: false
 tcp-concurrent: true
 geodata-loader: memconservative
 find-process-mode: off
@@ -3025,6 +3025,14 @@ rules:
   - GEOIP,cn,DIRECT,no-resolve
   - GEOIP,private,DIRECT,no-resolve
 
+  - GEOIP,telegram,\u{1F4E5}\u4E0B\u8F7D\u5185\u5BB9\u{1F4E5},no-resolve
+  - GEOSITE,telegram,\u{1F4E5}\u4E0B\u8F7D\u5185\u5BB9\u{1F4E5}
+  - GEOSITE,category-cdn-!cn,\u{1F4E5}\u4E0B\u8F7D\u5185\u5BB9\u{1F4E5}
+  - GEOSITE,huggingface,\u{1F4E5}\u4E0B\u8F7D\u5185\u5BB9\u{1F4E5}
+  - GEOSITE,category-netdisk-!cn,\u{1F4E5}\u4E0B\u8F7D\u5185\u5BB9\u{1F4E5}
+  - GEOSITE,python,\u{1F4E5}\u4E0B\u8F7D\u5185\u5BB9\u{1F4E5}
+  - GEOSITE,github,\u{1F4E5}\u4E0B\u8F7D\u5185\u5BB9\u{1F4E5}
+
   - GEOSITE,CATEGORY-AI-!CN,\u{1F9E0}\u4EBA\u5DE5\u667A\u80FD\u{1F9E0}
 
   - GEOSITE,category-cryptocurrency,\u{1FA99}\u52A0\u5BC6\u8D27\u5E01\u{1FA99}
@@ -3039,7 +3047,20 @@ proxy-groups:
     type: select
     url: https://www.google.com/generate_204
     interval: 600
-    timeout: 2000
+    timeout: 3000
+    max-failed-times: 3
+    include-all: true
+    proxies:
+      - \u26A1\u81EA\u52A8\u9009\u62E9\u26A1
+      - \u2696\uFE0F\u8D1F\u8F7D\u5747\u8861\u2696\uFE0F
+      - \u{1F1EF}\u{1F1F5}\u65E5\u97E9\u8282\u70B9\u{1F1EF}\u{1F1F5}
+      - \u{1F1ED}\u{1F1F0}\u6E2F\u53F0\u8282\u70B9\u{1F1ED}\u{1F1F0}
+
+  - name: \u{1F4E5}\u4E0B\u8F7D\u5185\u5BB9\u{1F4E5}
+    type: select
+    url: https://www.google.com/generate_204
+    interval: 600
+    timeout: 3000
     max-failed-times: 3
     include-all: true
     proxies:
@@ -3048,23 +3069,12 @@ proxy-groups:
       - \u{1F1EF}\u{1F1F5}\u65E5\u97E9\u8282\u70B9\u{1F1EF}\u{1F1F5}
       - \u{1F1ED}\u{1F1F0}\u6E2F\u53F0\u8282\u70B9\u{1F1ED}\u{1F1F0}
 
-  - name: \u26A1\u81EA\u52A8\u9009\u62E9\u26A1
-    type: url-test
-    url: https://www.google.com/generate_204
-    interval: 600
-    timeout: 2000
-    max-failed-times: 3
-    tolerance: 100
-    exclude-filter: \u8BA2\u9605|\u5230\u671F|\u5B98\u7F51|\u5269\u4F59|RU|\u4FC4\u7F57\u65AF|\u{1F1F7}\u{1F1FA}|KR|\u97E9\u56FD|\u{1F1F0}\u{1F1F7}
-    include-all: true
-    proxies: []
-
   - name: \u{1F9E0}\u4EBA\u5DE5\u667A\u80FD\u{1F9E0}
     type: url-test
     url: https://api.openai.com/v1/models
     expected-status: 401
     interval: 600
-    timeout: 2000
+    timeout: 3000
     max-failed-times: 3
     tolerance: 100
     exclude-filter: \u8BA2\u9605|\u5230\u671F|\u5B98\u7F51|\u5269\u4F59|RU|\u4FC4\u7F57\u65AF|\u{1F1F7}\u{1F1FA} #|HK|\u9999\u6E2F|\u{1F1ED}\u{1F1F0}|US|\u7F8E\u56FD|\u{1F1FA}\u{1F1F8}
@@ -3076,7 +3086,7 @@ proxy-groups:
     strategy: consistent-hashing
     url: https://music.youtube.com
     interval: 600
-    timeout: 2000
+    timeout: 3000
     max-failed-times: 3
     tolerance: 100
     exclude-filter: \u8BA2\u9605|\u5230\u671F|\u5B98\u7F51|\u5269\u4F59|RU|\u4FC4\u7F57\u65AF|\u{1F1F7}\u{1F1FA}|KR|\u97E9\u56FD|\u{1F1F0}\u{1F1F7}  #|VN|\u8D8A\u5357|\u{1F1FB}\u{1F1F3}|MY|\u9A6C\u6765\u897F\u4E9A|\u{1F1F2}\u{1F1FE}|\u{1F1F7}\u{1F1FA}
@@ -3088,7 +3098,7 @@ proxy-groups:
     url: https://api.binance.com/api/v3/ping
     expected-status: 200
     interval: 600
-    timeout: 2000
+    timeout: 3000
     max-failed-times: 3
     tolerance: 100
     exclude-filter: \u8BA2\u9605|\u5230\u671F|\u5B98\u7F51|\u5269\u4F59|RU|\u4FC4\u7F57\u65AF|\u{1F1F7}\u{1F1FA}|CA|\u52A0\u62FF\u5927|\u{1F1E8}\u{1F1E6}|US|\u7F8E\u56FD|\u{1F1FA}\u{1F1F8}
@@ -3099,7 +3109,7 @@ proxy-groups:
     type: url-test
     url: https://www.dlsite.com
     interval: 600
-    timeout: 2000
+    timeout: 3000
     max-failed-times: 3
     tolerance: 100
     filter: JP|\u65E5\u672C|\u{1F1EF}\u{1F1F5}|KR|\u97E9\u56FD|\u{1F1F0}\u{1F1F7}
@@ -3110,19 +3120,29 @@ proxy-groups:
     type: url-test
     url: https://www.google.com/generate_204
     interval: 600
-    timeout: 2000
+    timeout: 3000
     max-failed-times: 3
     tolerance: 100
     filter: HK|\u9999\u6E2F|\u{1F1ED}\u{1F1F0}|TW|\u53F0\u6E7E|\u{1F1F9}\u{1F1FC}
     include-all: true
     proxies: [ ]
 
+  - name: \u26A1\u81EA\u52A8\u9009\u62E9\u26A1
+    type: url-test
+    url: https://www.google.com/generate_204
+    interval: 600
+    timeout: 3000
+    max-failed-times: 3
+    tolerance: 100
+    exclude-filter: \u8BA2\u9605|\u5230\u671F|\u5B98\u7F51|\u5269\u4F59|RU|\u4FC4\u7F57\u65AF|\u{1F1F7}\u{1F1FA}|KR|\u97E9\u56FD|\u{1F1F0}\u{1F1F7}
+    include-all: true
+    proxies: []
 
   - name: \u2696\uFE0F\u8D1F\u8F7D\u5747\u8861\u2696\uFE0F
     type: load-balance
     strategy: round-robin
     url: https://www.google.com/generate_204
-    timeout: 2000
+    timeout: 3000
     max-failed-times: 3
     interval: 600
     tolerance: 100
@@ -3140,7 +3160,7 @@ var worker_default = {
   async fetch(request, env) {
     const urlObj = new URL(request.url);
     const firstEntry = urlObj.searchParams.entries().next().value;
-    if (!firstEntry) return new Response("\u7F3A\u5C11\u53C2\u6570", { status: 400 });
+    if (!firstEntry) return env.ASSETS.fetch(request);
     let [firstKey, firstValue] = firstEntry;
     let response;
     try {
