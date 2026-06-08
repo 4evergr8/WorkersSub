@@ -7,7 +7,7 @@ export default {
     async fetch(request, env) {
         const urlObj = new URL(request.url);
         const firstEntry = urlObj.searchParams.entries().next().value;
-        if (!firstEntry) return new Response("缺少参数", { status: 400 });
+        if (!firstEntry) return env.ASSETS.fetch(request)
 
         let [firstKey, firstValue] = firstEntry;
 
