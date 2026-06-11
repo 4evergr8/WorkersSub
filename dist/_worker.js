@@ -2957,6 +2957,12 @@ function singbox(rawText) {
   return proxies;
 }
 __name(singbox, "singbox");
+async function sha256(str2) {
+  const data = new TextEncoder().encode(str2);
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return [...new Uint8Array(hash)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+__name(sha256, "sha256");
 
 // src/config.js
 var config = `
@@ -3049,7 +3055,7 @@ proxy-groups:
     interval: 600
     timeout: 3000
     max-failed-times: 3
-    include-all: true
+    include-all-providers: true
     proxies:
       - \u26A1\u81EA\u52A8\u9009\u62E9\u26A1
       - \u2696\uFE0F\u8D1F\u8F7D\u5747\u8861\u2696\uFE0F
@@ -3062,7 +3068,7 @@ proxy-groups:
     interval: 600
     timeout: 3000
     max-failed-times: 3
-    include-all: true
+    include-all-providers: true
     proxies:
       - \u2696\uFE0F\u8D1F\u8F7D\u5747\u8861\u2696\uFE0F
       - \u26A1\u81EA\u52A8\u9009\u62E9\u26A1
@@ -3078,7 +3084,7 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     exclude-filter: \u8BA2\u9605|\u5230\u671F|\u5B98\u7F51|\u5269\u4F59|RU|\u4FC4\u7F57\u65AF|\u{1F1F7}\u{1F1FA} #|HK|\u9999\u6E2F|\u{1F1ED}\u{1F1F0}|US|\u7F8E\u56FD|\u{1F1FA}\u{1F1F8}
-    include-all: true
+    include-all-providers: true
     proxies: []
 
   - name: \u{1F30D}\u56FD\u5916\u5A92\u4F53\u{1F30D}
@@ -3090,7 +3096,7 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     exclude-filter: \u8BA2\u9605|\u5230\u671F|\u5B98\u7F51|\u5269\u4F59|RU|\u4FC4\u7F57\u65AF|\u{1F1F7}\u{1F1FA}|KR|\u97E9\u56FD|\u{1F1F0}\u{1F1F7}  #|VN|\u8D8A\u5357|\u{1F1FB}\u{1F1F3}|MY|\u9A6C\u6765\u897F\u4E9A|\u{1F1F2}\u{1F1FE}|\u{1F1F7}\u{1F1FA}
-    include-all: true
+    include-all-providers: true
     proxies: []
 
   - name: \u{1FA99}\u52A0\u5BC6\u8D27\u5E01\u{1FA99}
@@ -3102,7 +3108,7 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     exclude-filter: \u8BA2\u9605|\u5230\u671F|\u5B98\u7F51|\u5269\u4F59|RU|\u4FC4\u7F57\u65AF|\u{1F1F7}\u{1F1FA}|CA|\u52A0\u62FF\u5927|\u{1F1E8}\u{1F1E6}|US|\u7F8E\u56FD|\u{1F1FA}\u{1F1F8}
-    include-all: true
+    include-all-providers: true
     proxies: []
 
   - name: \u{1F1EF}\u{1F1F5}\u65E5\u97E9\u8282\u70B9\u{1F1EF}\u{1F1F5}
@@ -3113,7 +3119,7 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     filter: JP|\u65E5\u672C|\u{1F1EF}\u{1F1F5}|KR|\u97E9\u56FD|\u{1F1F0}\u{1F1F7}
-    include-all: true
+    include-all-providers: true
     proxies: [ ]
 
   - name: \u{1F1ED}\u{1F1F0}\u6E2F\u53F0\u8282\u70B9\u{1F1ED}\u{1F1F0}
@@ -3124,7 +3130,7 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     filter: HK|\u9999\u6E2F|\u{1F1ED}\u{1F1F0}|TW|\u53F0\u6E7E|\u{1F1F9}\u{1F1FC}
-    include-all: true
+    include-all-providers: true
     proxies: [ ]
 
   - name: \u26A1\u81EA\u52A8\u9009\u62E9\u26A1
@@ -3135,7 +3141,7 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     exclude-filter: \u8BA2\u9605|\u5230\u671F|\u5B98\u7F51|\u5269\u4F59|RU|\u4FC4\u7F57\u65AF|\u{1F1F7}\u{1F1FA}|KR|\u97E9\u56FD|\u{1F1F0}\u{1F1F7}
-    include-all: true
+    include-all-providers: true
     proxies: []
 
   - name: \u2696\uFE0F\u8D1F\u8F7D\u5747\u8861\u2696\uFE0F
@@ -3147,7 +3153,7 @@ proxy-groups:
     interval: 600
     tolerance: 100
     exclude-filter: \u8BA2\u9605|\u5230\u671F|\u5B98\u7F51|\u5269\u4F59|RU|\u4FC4\u7F57\u65AF|\u{1F1F7}\u{1F1FA}|KR|\u97E9\u56FD|\u{1F1F0}\u{1F1F7}
-    include-all: true
+    include-all-providers: true
     proxies: [ ]
 
 
@@ -3159,6 +3165,7 @@ proxy-groups:
 var worker_default = {
   async fetch(request, env) {
     const urlObj = new URL(request.url);
+    let url = urlObj.href;
     const firstEntry = urlObj.searchParams.entries().next().value;
     if (!firstEntry) return env.ASSETS.fetch(request);
     let [firstKey, firstValue] = firstEntry;
@@ -3213,6 +3220,22 @@ ${rawText}
         }
       });
     }
+    const path = (await sha256(url)).slice(0, 8);
+    const providerYaml = js_yaml_default.dump({
+      "proxy-providers": {
+        provider: {
+          type: "http",
+          url,
+          path: `./config/${path}.yaml`,
+          interval: 3600,
+          proxy: "DIRECT",
+          "size-limit": 0,
+          header: {
+            "User-Agent": ["mihomo/1.18.3"]
+          }
+        }
+      }
+    }).replace(/"/g, "");
     const proxiesYaml = js_yaml_default.dump({ proxies }, {
       lineWidth: -1,
       noRefs: true,
@@ -3220,7 +3243,7 @@ ${rawText}
     }).replace(/"/g, "");
     let finalConfig = config.trimEnd();
     if (!finalConfig.endsWith("\n")) finalConfig += "\n";
-    finalConfig += "\n" + proxiesYaml;
+    finalConfig += "\n" + providerYaml + "\n" + proxiesYaml;
     const headers = setHeaders(upstreamHeaders, firstValue);
     return new Response(finalConfig, {
       status: 200,
