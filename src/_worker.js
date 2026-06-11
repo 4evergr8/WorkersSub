@@ -1,23 +1,23 @@
 import yaml from "js-yaml";
-import {clash, singbox, v2ray} from "./utils.js";
+import {clash, sha256, singbox, v2ray} from "./utils.js";
 import {config} from "./config.js";
 
 // ===== 主函数 =====
 export default {
     async fetch(request, env) {
         const urlObj = new URL(request.url);
+        let url = urlObj.href
         const firstEntry = urlObj.searchParams.entries().next().value;
         if (!firstEntry) return env.ASSETS.fetch(request)
 
         let [firstKey, firstValue] = firstEntry;
 
 
-
         // ===== 2. 请求订阅 =====
         let response;
         try {
             response = await fetch(firstValue, {
-                headers: { "User-Agent": "ClashMeta/1.19.15" }
+                headers: {"User-Agent": "ClashMeta/1.19.15"}
             });
         } catch (e) {
             return Response.redirect(firstValue, 302);
@@ -78,10 +78,27 @@ ${rawText}
         }
 
 
+        const path = (await sha256(url)).slice(0, 8);
+
+        const providerYaml = yaml.dump({
+            "proxy-providers": {
+                provider: {
+                    type: "http",
+                    url: url,
+                    path: `./config/${path}.yaml`,
+                    interval: 3600,
+                    proxy: "DIRECT",
+                    "size-limit": 0,
+                    header: {
+                        "User-Agent": ["mihomo/1.18.3"]
+                    }
+                }
+            }
+        }).replace(/"/g, '');
 
 
         // ===== 5. 将 proxies 转为 YAML 并追加 =====
-        const proxiesYaml = yaml.dump({ proxies: proxies }, {
+        const proxiesYaml = yaml.dump({proxies: proxies}, {
             lineWidth: -1,
             noRefs: true,
             indent: 2
@@ -89,7 +106,7 @@ ${rawText}
 
         let finalConfig = config.trimEnd();
         if (!finalConfig.endsWith('\n')) finalConfig += '\n';
-        finalConfig += '\n' + proxiesYaml;
+        finalConfig += '\n' + providerYaml+'\n' +proxiesYaml;
 
         // ===== 6. 设置返回头 =====
         const headers = setHeaders(upstreamHeaders, firstValue);
