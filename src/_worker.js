@@ -82,33 +82,33 @@ ${rawText}
 
         const path = (await sha256(url)).slice(0, 8);
 
-        const providerYaml = yaml.dump({
-            "proxy-providers": {
-                provider1: {
-                    type: "http",
-                    url: url,
-                    path: `./config/${path}.yaml`,
-                    interval: 3600,
-                    proxy: "DIRECT",
-                    "size-limit": 0,
-                    header: {
-                        "User-Agent": ["mihomo/1.18.3"]
-                    },
-                    "health-check": {enable: false},
-                }, provider2: {
-                    type: "http",
-                    url: url,
-                    path: `./config.yaml`,
-                    interval: 3600,
-                    proxy: "DIRECT",
-                    "size-limit": 0,
-                    header: {
-                        "User-Agent": ["mihomo/1.18.3"]
-                    },
-                    "health-check": {enable: false}
-                }
-            }
-        }).replace(/"/g, '');
+        // const providerYaml = yaml.dump({
+        //     "proxy-providers": {
+        //         provider1: {
+        //             type: "http",
+        //             url: url,
+        //             path: `./config/${path}.yaml`,
+        //             interval: 3600,
+        //             proxy: "DIRECT",
+        //             "size-limit": 0,
+        //             header: {
+        //                 "User-Agent": ["mihomo/1.18.3"]
+        //             },
+        //             "health-check": {enable: false},
+        //         }, provider2: {
+        //             type: "http",
+        //             url: url,
+        //             path: `./config.yaml`,
+        //             interval: 3600,
+        //             proxy: "DIRECT",
+        //             "size-limit": 0,
+        //             header: {
+        //                 "User-Agent": ["mihomo/1.18.3"]
+        //             },
+        //             "health-check": {enable: false}
+        //         }
+        //     }
+        // }).replace(/"/g, '');
 
 
 
@@ -124,7 +124,7 @@ ${rawText}
         let finalConfig = config.trimEnd();
         if (!finalConfig.endsWith('\n')) finalConfig += '\n';
 
-        finalConfig +=  '\n' + proxiesYaml+"\n"+providerYaml;
+        finalConfig +=  '\n' + proxiesYaml//+"\n"+providerYaml;
 
         // ===== 6. 设置返回头 =====
         const headers = setHeaders(upstreamHeaders, firstValue);
