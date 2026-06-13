@@ -17,7 +17,9 @@ export default {
         let response;
         try {
             response = await fetch(firstValue, {
-                headers: {"User-Agent": "ClashMeta/1.19.15"}
+                headers: {"User-Agent": "mihomo/1.18.3"},
+                signal: AbortSignal.timeout(3000)   // 3秒超时
+
             });
         } catch (e) {
             return Response.redirect(firstValue, 302);
@@ -82,7 +84,7 @@ ${rawText}
 
         const providerYaml = yaml.dump({
             "proxy-providers": {
-                provider: {
+                provider1: {
                     type: "http",
                     url: url,
                     path: `./config/${path}.yaml`,
@@ -91,10 +93,25 @@ ${rawText}
                     "size-limit": 0,
                     header: {
                         "User-Agent": ["mihomo/1.18.3"]
-                    }
+                    },
+                    "health-check": {enable: false},
+                }, provider2: {
+                    type: "http",
+                    url: url,
+                    path: `./config.yaml`,
+                    interval: 3600,
+                    proxy: "DIRECT",
+                    "size-limit": 0,
+                    header: {
+                        "User-Agent": ["mihomo/1.18.3"]
+                    },
+                    "health-check": {enable: false}
                 }
             }
         }).replace(/"/g, '');
+
+
+
 
 
         // ===== 5. 将 proxies 转为 YAML 并追加 =====
@@ -106,7 +123,8 @@ ${rawText}
 
         let finalConfig = config.trimEnd();
         if (!finalConfig.endsWith('\n')) finalConfig += '\n';
-        finalConfig += '\n' + providerYaml+'\n' +proxiesYaml;
+
+        finalConfig +=  '\n' + proxiesYaml+"\n"+providerYaml;
 
         // ===== 6. 设置返回头 =====
         const headers = setHeaders(upstreamHeaders, firstValue);
