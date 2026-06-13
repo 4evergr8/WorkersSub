@@ -88,7 +88,8 @@ proxy-groups:
     interval: 600
     timeout: 3000
     max-failed-times: 3
-    include-all-providers: true
+    include-all-providers: false
+    include-all-proxies: true
     proxies:
       - ⚡自动选择⚡
       - ⚖️负载均衡⚖️
@@ -101,7 +102,8 @@ proxy-groups:
     interval: 600
     timeout: 3000
     max-failed-times: 3
-    include-all-providers: true
+    include-all-providers: false
+    include-all-proxies: true
     proxies:
       - ⚖️负载均衡⚖️
       - ⚡自动选择⚡
@@ -117,7 +119,8 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺 #|HK|香港|🇭🇰|US|美国|🇺🇸
-    include-all-providers: true
+    include-all-providers: false
+    include-all-proxies: true
     proxies: []
 
   - name: 🌍国外媒体🌍
@@ -129,7 +132,8 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷  #|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|🇷🇺
-    include-all-providers: true
+    include-all-providers: false
+    include-all-proxies: true
     proxies: []
 
   - name: 🪙加密货币🪙
@@ -141,7 +145,8 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|CA|加拿大|🇨🇦|US|美国|🇺🇸
-    include-all-providers: true
+    include-all-providers: false
+    include-all-proxies: true
     proxies: []
 
   - name: 🇯🇵日韩节点🇯🇵
@@ -152,7 +157,8 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     filter: JP|日本|🇯🇵|KR|韩国|🇰🇷
-    include-all-providers: true
+    include-all-providers: false
+    include-all-proxies: true
     proxies: [ ]
 
   - name: 🇭🇰港台节点🇭🇰
@@ -163,9 +169,10 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     filter: HK|香港|🇭🇰|TW|台湾|🇹🇼
-    include-all-providers: true
+    include-all-providers: false
+    include-all-proxies: true
     proxies: [ ]
-
+    
   - name: ⚡自动选择⚡
     type: url-test
     url: https://www.google.com/generate_204
@@ -174,7 +181,8 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
-    include-all-providers: true
+    include-all-providers: false
+    include-all-proxies: true
     proxies: []
 
   - name: ⚖️负载均衡⚖️
@@ -186,7 +194,8 @@ proxy-groups:
     interval: 600
     tolerance: 100
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
-    include-all-providers: true
+    include-all-providers: false
+    include-all-proxies: true
     proxies: [ ]
 
 
