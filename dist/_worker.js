@@ -3055,7 +3055,8 @@ proxy-groups:
     interval: 600
     timeout: 3000
     max-failed-times: 3
-    include-all-providers: true
+    include-all-providers: false
+    include-all-proxies: true
     proxies:
       - \u26A1\u81EA\u52A8\u9009\u62E9\u26A1
       - \u2696\uFE0F\u8D1F\u8F7D\u5747\u8861\u2696\uFE0F
@@ -3068,7 +3069,8 @@ proxy-groups:
     interval: 600
     timeout: 3000
     max-failed-times: 3
-    include-all-providers: true
+    include-all-providers: false
+    include-all-proxies: true
     proxies:
       - \u2696\uFE0F\u8D1F\u8F7D\u5747\u8861\u2696\uFE0F
       - \u26A1\u81EA\u52A8\u9009\u62E9\u26A1
@@ -3084,7 +3086,8 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     exclude-filter: \u8BA2\u9605|\u5230\u671F|\u5B98\u7F51|\u5269\u4F59|RU|\u4FC4\u7F57\u65AF|\u{1F1F7}\u{1F1FA} #|HK|\u9999\u6E2F|\u{1F1ED}\u{1F1F0}|US|\u7F8E\u56FD|\u{1F1FA}\u{1F1F8}
-    include-all-providers: true
+    include-all-providers: false
+    include-all-proxies: true
     proxies: []
 
   - name: \u{1F30D}\u56FD\u5916\u5A92\u4F53\u{1F30D}
@@ -3096,7 +3099,8 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     exclude-filter: \u8BA2\u9605|\u5230\u671F|\u5B98\u7F51|\u5269\u4F59|RU|\u4FC4\u7F57\u65AF|\u{1F1F7}\u{1F1FA}|KR|\u97E9\u56FD|\u{1F1F0}\u{1F1F7}  #|VN|\u8D8A\u5357|\u{1F1FB}\u{1F1F3}|MY|\u9A6C\u6765\u897F\u4E9A|\u{1F1F2}\u{1F1FE}|\u{1F1F7}\u{1F1FA}
-    include-all-providers: true
+    include-all-providers: false
+    include-all-proxies: true
     proxies: []
 
   - name: \u{1FA99}\u52A0\u5BC6\u8D27\u5E01\u{1FA99}
@@ -3108,7 +3112,8 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     exclude-filter: \u8BA2\u9605|\u5230\u671F|\u5B98\u7F51|\u5269\u4F59|RU|\u4FC4\u7F57\u65AF|\u{1F1F7}\u{1F1FA}|CA|\u52A0\u62FF\u5927|\u{1F1E8}\u{1F1E6}|US|\u7F8E\u56FD|\u{1F1FA}\u{1F1F8}
-    include-all-providers: true
+    include-all-providers: false
+    include-all-proxies: true
     proxies: []
 
   - name: \u{1F1EF}\u{1F1F5}\u65E5\u97E9\u8282\u70B9\u{1F1EF}\u{1F1F5}
@@ -3119,7 +3124,8 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     filter: JP|\u65E5\u672C|\u{1F1EF}\u{1F1F5}|KR|\u97E9\u56FD|\u{1F1F0}\u{1F1F7}
-    include-all-providers: true
+    include-all-providers: false
+    include-all-proxies: true
     proxies: [ ]
 
   - name: \u{1F1ED}\u{1F1F0}\u6E2F\u53F0\u8282\u70B9\u{1F1ED}\u{1F1F0}
@@ -3130,9 +3136,10 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     filter: HK|\u9999\u6E2F|\u{1F1ED}\u{1F1F0}|TW|\u53F0\u6E7E|\u{1F1F9}\u{1F1FC}
-    include-all-providers: true
+    include-all-providers: false
+    include-all-proxies: true
     proxies: [ ]
-
+    
   - name: \u26A1\u81EA\u52A8\u9009\u62E9\u26A1
     type: url-test
     url: https://www.google.com/generate_204
@@ -3141,7 +3148,8 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     exclude-filter: \u8BA2\u9605|\u5230\u671F|\u5B98\u7F51|\u5269\u4F59|RU|\u4FC4\u7F57\u65AF|\u{1F1F7}\u{1F1FA}|KR|\u97E9\u56FD|\u{1F1F0}\u{1F1F7}
-    include-all-providers: true
+    include-all-providers: false
+    include-all-proxies: true
     proxies: []
 
   - name: \u2696\uFE0F\u8D1F\u8F7D\u5747\u8861\u2696\uFE0F
@@ -3153,7 +3161,8 @@ proxy-groups:
     interval: 600
     tolerance: 100
     exclude-filter: \u8BA2\u9605|\u5230\u671F|\u5B98\u7F51|\u5269\u4F59|RU|\u4FC4\u7F57\u65AF|\u{1F1F7}\u{1F1FA}|KR|\u97E9\u56FD|\u{1F1F0}\u{1F1F7}
-    include-all-providers: true
+    include-all-providers: false
+    include-all-proxies: true
     proxies: [ ]
 
 
@@ -3172,7 +3181,9 @@ var worker_default = {
     let response;
     try {
       response = await fetch(firstValue, {
-        headers: { "User-Agent": "ClashMeta/1.19.15" }
+        headers: { "User-Agent": "mihomo/1.18.3" },
+        signal: AbortSignal.timeout(3e3)
+        // 3秒超时
       });
     } catch (e) {
       return Response.redirect(firstValue, 302);
@@ -3223,7 +3234,7 @@ ${rawText}
     const path = (await sha256(url)).slice(0, 8);
     const providerYaml = js_yaml_default.dump({
       "proxy-providers": {
-        provider: {
+        provider1: {
           type: "http",
           url,
           path: `./config/${path}.yaml`,
@@ -3232,7 +3243,20 @@ ${rawText}
           "size-limit": 0,
           header: {
             "User-Agent": ["mihomo/1.18.3"]
-          }
+          },
+          "health-check": { enable: false }
+        },
+        provider2: {
+          type: "http",
+          url,
+          path: `./config.yaml`,
+          interval: 3600,
+          proxy: "DIRECT",
+          "size-limit": 0,
+          header: {
+            "User-Agent": ["mihomo/1.18.3"]
+          },
+          "health-check": { enable: false }
         }
       }
     }).replace(/"/g, "");
@@ -3243,7 +3267,7 @@ ${rawText}
     }).replace(/"/g, "");
     let finalConfig = config.trimEnd();
     if (!finalConfig.endsWith("\n")) finalConfig += "\n";
-    finalConfig += "\n" + providerYaml + "\n" + proxiesYaml;
+    finalConfig += "\n" + proxiesYaml + "\n" + providerYaml;
     const headers = setHeaders(upstreamHeaders, firstValue);
     return new Response(finalConfig, {
       status: 200,
