@@ -3232,34 +3232,6 @@ ${rawText}
       });
     }
     const path = (await sha256(url)).slice(0, 8);
-    const providerYaml = js_yaml_default.dump({
-      "proxy-providers": {
-        provider1: {
-          type: "http",
-          url,
-          path: `./config/${path}.yaml`,
-          interval: 3600,
-          proxy: "DIRECT",
-          "size-limit": 0,
-          header: {
-            "User-Agent": ["mihomo/1.18.3"]
-          },
-          "health-check": { enable: false }
-        },
-        provider2: {
-          type: "http",
-          url,
-          path: `./config.yaml`,
-          interval: 3600,
-          proxy: "DIRECT",
-          "size-limit": 0,
-          header: {
-            "User-Agent": ["mihomo/1.18.3"]
-          },
-          "health-check": { enable: false }
-        }
-      }
-    }).replace(/"/g, "");
     const proxiesYaml = js_yaml_default.dump({ proxies }, {
       lineWidth: -1,
       noRefs: true,
@@ -3267,7 +3239,7 @@ ${rawText}
     }).replace(/"/g, "");
     let finalConfig = config.trimEnd();
     if (!finalConfig.endsWith("\n")) finalConfig += "\n";
-    finalConfig += "\n" + proxiesYaml + "\n" + providerYaml;
+    finalConfig += "\n" + proxiesYaml;
     const headers = setHeaders(upstreamHeaders, firstValue);
     return new Response(finalConfig, {
       status: 200,
