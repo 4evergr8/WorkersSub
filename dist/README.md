@@ -1,1 +1,0 @@
-This folder contains the built output assets for the worker "sub" generated at 2026-06-13T07:36:32.421Z.
