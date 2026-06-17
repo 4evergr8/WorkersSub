@@ -17,7 +17,7 @@ export default {
         let response;
         try {
             response = await fetch(firstValue, {
-                headers: {"User-Agent": "mihomo/1.18.3"},
+                headers: {"User-Agent": "clash.meta"},
                 signal: AbortSignal.timeout(3000)   // 3秒超时
 
             });
@@ -92,20 +92,9 @@ ${rawText}
         //             proxy: "DIRECT",
         //             "size-limit": 0,
         //             header: {
-        //                 "User-Agent": ["mihomo/1.18.3"]
+        //                 "User-Agent": ["clash.meta"]
         //             },
         //             "health-check": {enable: false},
-        //         }, provider2: {
-        //             type: "http",
-        //             url: url,
-        //             path: `./config.yaml`,
-        //             interval: 3600,
-        //             proxy: "DIRECT",
-        //             "size-limit": 0,
-        //             header: {
-        //                 "User-Agent": ["mihomo/1.18.3"]
-        //             },
-        //             "health-check": {enable: false}
         //         }
         //     }
         // }).replace(/"/g, '');
