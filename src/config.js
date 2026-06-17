@@ -1,4 +1,21 @@
 export const config = `
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 mode: rule
 external-controller: 127.0.0.1:9090
 external-ui: ./metacubexd
@@ -17,8 +34,8 @@ geo-update-interval: 24
 etag-support: true
 geodata-mode: true
 geox-url:
-  geoip: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
-  geosite: "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
+  geoip: "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat"
+  geosite: "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat"
 profile:
   store-selected: false
   store-fake-ip: true
@@ -55,8 +72,7 @@ dns:
     - https://doh.pub/dns-query
 
 rules:
-  - GEOSITE,category-ads-all,REJECT
-  - IP-CIDR,0.0.0.0/32,REJECT,no-resolve
+  - GEOSITE,category-ads-all,REJECT-DROP
 
   - GEOSITE,cn,DIRECT
   - GEOSITE,googlefcm,DIRECT
@@ -72,14 +88,13 @@ rules:
   - GEOSITE,python,📥下载内容📥
   - GEOSITE,github,📥下载内容📥
 
-  - GEOSITE,CATEGORY-AI-!CN,🧠人工智能🧠
+  - GEOSITE,category-ai-!cn,🧠人工智能🧠
 
   - GEOSITE,category-cryptocurrency,🪙加密货币🪙
 
   - GEOSITE,youtube,🌍国外媒体🌍
 
   - MATCH,📌节点选择📌
-
 
 proxy-groups:
   - name: 📌节点选择📌
@@ -96,6 +111,19 @@ proxy-groups:
       - 🇯🇵日韩节点🇯🇵
       - 🇭🇰港台节点🇭🇰
 
+  - name: 🧠人工智能🧠
+    type: url-test
+    url: https://api.openai.com/v1/models
+    expected-status: 401
+    interval: 600
+    timeout: 3000
+    max-failed-times: 3
+    tolerance: 100
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺 #|HK|香港|🇭🇰|US|美国|🇺🇸
+    include-all-providers: false
+    include-all-proxies: true
+    proxies: []
+    
   - name: 📥下载内容📥
     type: select
     url: https://www.google.com/generate_204
@@ -109,19 +137,6 @@ proxy-groups:
       - ⚡自动选择⚡
       - 🇯🇵日韩节点🇯🇵
       - 🇭🇰港台节点🇭🇰
-
-  - name: 🧠人工智能🧠
-    type: url-test
-    url: https://api.openai.com/v1/models
-    expected-status: 401
-    interval: 600
-    timeout: 3000
-    max-failed-times: 3
-    tolerance: 100
-    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺 #|HK|香港|🇭🇰|US|美国|🇺🇸
-    include-all-providers: false
-    include-all-proxies: true
-    proxies: []
 
   - name: 🌍国外媒体🌍
     type: load-balance
@@ -172,7 +187,7 @@ proxy-groups:
     include-all-providers: false
     include-all-proxies: true
     proxies: [ ]
-    
+
   - name: ⚡自动选择⚡
     type: url-test
     url: https://www.google.com/generate_204
@@ -187,8 +202,8 @@ proxy-groups:
 
   - name: ⚖️负载均衡⚖️
     type: load-balance
-    strategy: round-robin
-    url: https://www.google.com/generate_204
+    strategy: consistent-hashing
+    url: https://web.telegram.org/k
     timeout: 3000
     max-failed-times: 3
     interval: 600
@@ -197,6 +212,8 @@ proxy-groups:
     include-all-providers: false
     include-all-proxies: true
     proxies: [ ]
+
+
 
 
 
