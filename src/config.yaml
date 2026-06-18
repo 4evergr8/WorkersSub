@@ -20,7 +20,7 @@ geox-url:
   geosite: "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat"
 profile:
   store-selected: false
-  store-fake-ip: true
+  store-fake-ip: false
 
 
 tun:
@@ -35,22 +35,21 @@ tun:
 dns:
   enable: true
   cache-algorithm: lru
-  prefer-h3: false
   listen: 0.0.0.0:1053
   ipv6: true
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
-  default-nameserver:
+  fake-ip-filter-mode: blacklist
+  fake-ip-filter:
+    - geosite:private
+  nameserver:
     - tls://1.12.12.12:853
     - tls://223.5.5.5:853
-  nameserver:
-    - https://dns.alidns.com/dns-query#h3=true
-    - https://doh.pub/dns-query
 
 
 rules:
-  - RULE-SET,Advertising_OCD_Domain,REJECT-DROP
-  - RULE-SET,Advertising_OCD_IP,REJECT-DROP,no-resolve
+  - RULE-SET,Advertising_OCD_Domain,REJECT
+  - RULE-SET,Advertising_OCD_IP,REJECT,no-resolve
 
   - DOMAIN-SUFFIX,pages.dev,DIRECT
 
@@ -69,15 +68,13 @@ rules:
   - GEOSITE,category-netdisk-!cn,🌍国外媒体🌍
   - GEOSITE,python,🌍国外媒体🌍
   - GEOSITE,github,🌍国外媒体🌍
-  - RULE-SET,GlobalMedia_OCD_Domain,🌍国外媒体🌍
-  - RULE-SET,GlobalMedia_OCD_IP,🌍国外媒体🌍,no-resolve
+  - GEOSITE,youtube,🌍国外媒体🌍
 
   - GEOSITE,category-ai-!cn,🧠人工智能🧠
 
   - GEOSITE,category-cryptocurrency,🪙加密货币🪙
 
   - MATCH,📌节点选择📌
-
 
 
 rule-providers:
@@ -94,24 +91,6 @@ rule-providers:
     type: http
     path: ./rule/Advertising_OCD_IP.mrs
     url: "https://cdn.jsdelivr.net/gh/peiyingyao/Rule-for-OCD@master/rule/Clash/Advertising/Advertising_OCD_IP.mrs"
-    interval: 86400
-    proxy: DIRECT
-    behavior: ipcidr
-    format: mrs
-
-  GlobalMedia_OCD_Domain:
-    type: http
-    path: ./rule/GlobalMedia_OCD_Domain.mrs
-    url: "https://cdn.jsdelivr.net/gh/peiyingyao/Rule-for-OCD@master/rule/Clash/GlobalMedia/GlobalMedia_OCD_Domain.mrs"
-    interval: 86400
-    proxy: DIRECT
-    behavior: domain
-    format: mrs
-
-  GlobalMedia_OCD_IP:
-    type: http
-    path: ./rule/GlobalMedia_OCD_IP.mrs
-    url: "https://cdn.jsdelivr.net/gh/peiyingyao/Rule-for-OCD@master/rule/Clash/GlobalMedia/GlobalMedia_OCD_IP.mrs"
     interval: 86400
     proxy: DIRECT
     behavior: ipcidr
@@ -143,7 +122,6 @@ proxy-groups:
     interval: 600
     timeout: 3000
     max-failed-times: 3
-    include-all-providers: false
     include-all-proxies: true
     proxies:
       - ⚡自动选择⚡
@@ -160,7 +138,6 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺 #|HK|香港|🇭🇰|US|美国|🇺🇸
-    include-all-providers: false
     include-all-proxies: true
     proxies: []
 
@@ -170,7 +147,6 @@ proxy-groups:
     interval: 600
     timeout: 3000
     max-failed-times: 3
-    include-all-providers: false
     include-all-proxies: true
     proxies:
       - ⚖️负载均衡⚖️
@@ -187,7 +163,6 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|CA|加拿大|🇨🇦|US|美国|🇺🇸
-    include-all-providers: false
     include-all-proxies: true
     proxies: []
 
@@ -199,7 +174,6 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
-    include-all-providers: false
     include-all-proxies: true
     proxies: [ ]
 
@@ -211,7 +185,6 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     filter: JP|日本|🇯🇵|KR|韩国|🇰🇷
-    include-all-providers: false
     include-all-proxies: true
     proxies: [ ]
 
@@ -223,20 +196,18 @@ proxy-groups:
     max-failed-times: 3
     tolerance: 100
     filter: HK|香港|🇭🇰|TW|台湾|🇹🇼
-    include-all-providers: false
     include-all-proxies: true
     proxies: [ ]
 
   - name: ⚖️负载均衡⚖️
     type: load-balance
     strategy: consistent-hashing
-    url: https://music.youtube.com
+    url: https://web.telegram.org/k
     interval: 600
     timeout: 3000
     max-failed-times: 3
     tolerance: 100
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷  #|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|🇷🇺
-    include-all-providers: false
     include-all-proxies: true
     proxies: []
 
