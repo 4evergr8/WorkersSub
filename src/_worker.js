@@ -1,6 +1,6 @@
 import yaml from "js-yaml";
 import {clash, sha256, singbox, v2ray} from "./utils.js";
-import {config} from "./config.js";
+
 
 // ===== 主函数 =====
 export default {
@@ -110,6 +110,9 @@ ${rawText}
             indent: 2
         }).replace(/"/g, '');
 
+
+        const cfgResp = await env.ASSETS.fetch(new URL("./config.yaml", request.url));
+        const config = await cfgResp.text();
         let finalConfig = config.trimEnd();
         if (!finalConfig.endsWith('\n')) finalConfig += '\n';
 
