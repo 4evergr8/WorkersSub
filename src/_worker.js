@@ -1,5 +1,5 @@
 import yaml from "js-yaml";
-import {clash, sha256, singbox, v2ray} from "./utils.js";
+import {clash, singbox, v2ray} from "./utils.js";
 
 
 // ===== 主函数 =====
@@ -12,25 +12,18 @@ export default {
 
         let [firstKey, firstValue] = firstEntry;
 
-
-        // ===== 2. 请求订阅 =====
         let response;
         try {
             response = await fetch(firstValue, {
                 headers: {"User-Agent": "clash.meta"},
-                signal: AbortSignal.timeout(3000)   // 3秒超时
-
             });
         } catch (e) {
             return Response.redirect(firstValue, 302);
         }
-
         const upstreamHeaders = new Headers(response.headers);
         const rawText = await response.text();
-
-        // ===== 3. 解析订阅 =====
         let proxies = [];
-        let parseError = null;
+        let Error = null;
 
         try {
             if (firstKey.includes('clash')) {
@@ -41,36 +34,17 @@ export default {
                 proxies = singbox(rawText);
             }
         } catch (e) {
-            parseError = `解析失败（${firstKey} 解析器异常）：${e.message}`;
+            Error = `解析器异常: ${e.message}`;
         }
 
-        // 新增：如果没有提取到节点，尝试判断是否为有效 YAML（防止把纯 base64 或其他格式误判）
-        if ((!proxies || proxies.length === 0) && !parseError) {
-            // 如果解析器返回空，但内容看起来像 YAML，可能是格式问题或确实无节点
-            if (rawText.trim().startsWith('proxies:') || rawText.includes('port:') || rawText.includes('- name:')) {
-                parseError = "订阅解析成功，但未提取到任何节点（proxies 为空）";
-            } else {
-                parseError = "订阅内容无法被当前解析器识别（可能不是有效的 Clash / Sing-box / V2Ray 订阅）";
-            }
+        if (!proxies || proxies.length === 0) {
+            Error = Error || "订阅解析失败或订阅内不存在代理节点";
         }
 
-        // ===== 错误处理：无法解析或无节点时，返回错误 + 原始内容 =====
-        if (parseError || !proxies || proxies.length === 0) {
-            const errorMsg = parseError || "未知原因导致未提取到节点";
+        if (Error) {
+            const errorText = Error + "\n" + rawText;
 
-            const errorResponse = `
-====================== 错误信息 ======================
-${errorMsg}
-
-请求地址, ${firstValue}
-返回状态码, ${response.status} ${response.statusText}
-内容长度, ${rawText.length} 字符
-=====================================================
-
-${rawText}
-`.trim();
-
-            return new Response(errorResponse, {
+            return new Response(errorText, {
                 status: 200,
                 headers: {
                     'Content-Type': 'text/plain; charset=utf-8',
@@ -78,30 +52,6 @@ ${rawText}
                 }
             });
         }
-
-
-        const path = (await sha256(url)).slice(0, 8);
-
-        // const providerYaml = yaml.dump({
-        //     "proxy-providers": {
-        //         provider1: {
-        //             type: "http",
-        //             url: url,
-        //             path: `./config/${path}.yaml`,
-        //             interval: 3600,
-        //             proxy: "DIRECT",
-        //             "size-limit": 0,
-        //             header: {
-        //                 "User-Agent": ["clash.meta"]
-        //             },
-        //             "health-check": {enable: false},
-        //         }
-        //     }
-        // }).replace(/"/g, '');
-
-
-
-
 
         // ===== 5. 将 proxies 转为 YAML 并追加 =====
         const proxiesYaml = yaml.dump({proxies: proxies}, {
@@ -116,7 +66,7 @@ ${rawText}
         let finalConfig = config.trimEnd();
         if (!finalConfig.endsWith('\n')) finalConfig += '\n';
 
-        finalConfig +=  '\n' + proxiesYaml//+"\n"+providerYaml;
+        finalConfig += '\n' + proxiesYaml;
 
         // ===== 6. 设置返回头 =====
         const headers = setHeaders(upstreamHeaders, firstValue);
