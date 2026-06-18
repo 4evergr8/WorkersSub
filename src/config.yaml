@@ -9,7 +9,15 @@ keep-alive-interval: 10
 disable-keep-alive: false
 unified-delay: false
 tcp-concurrent: true
+geodata-loader: memconservative
 find-process-mode: off
+geo-auto-update: true
+geo-update-interval: 24
+etag-support: true
+geodata-mode: true
+geox-url:
+  geoip: "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat"
+  geosite: "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat"
 profile:
   store-selected: false
   store-fake-ip: true
@@ -32,11 +40,6 @@ dns:
   ipv6: true
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
-  fake-ip-filter-mode: blacklist
-  fake-ip-filter:
-    - RULE-SET:ChinaMax_OCD_Domain
-    - RULE-SET:Lan_OCD_Domain
-  use-system-hosts: true
   default-nameserver:
     - tls://1.12.12.12:853
     - tls://223.5.5.5:853
@@ -46,39 +49,32 @@ dns:
 
 
 rules:
-  - RULE-SET,Advertising_OCD_Domain,REJECT
-  - RULE-SET,Advertising_OCD_IP,REJECT,no-resolve
+  - RULE-SET,Advertising_OCD_Domain,REJECT-DROP
+  - RULE-SET,Advertising_OCD_IP,REJECT-DROP,no-resolve
 
   - DOMAIN-SUFFIX,pages.dev,DIRECT
 
   - RULE-SET,ChinaMax_OCD_Domain,DIRECT
   - RULE-SET,ChinaMax_OCD_IP,DIRECT,no-resolve
 
-  - RULE-SET,GoogleFCM_OCD_Domain,DIRECT
-  - RULE-SET,GoogleFCM_OCD_IP,DIRECT,no-resolve
+  - GEOSITE,private,DIRECT
+  - GEOIP,private,DIRECT,no-resolve
 
-  - RULE-SET,Lan_OCD_Domain,DIRECT
-  - RULE-SET,Lan_OCD_IP,DIRECT,no-resolve
-
-  - RULE-SET,Telegram_OCD_Domain,国外媒体🌍
-  - RULE-SET,Telegram_OCD_IP,国外媒体🌍,no-resolve
-
-
-
+  - GEOSITE,googlefcm,DIRECT
 
   - GEOIP,telegram,🌍国外媒体🌍,no-resolve
   - GEOSITE,telegram,🌍国外媒体🌍
   - GEOSITE,category-cdn-!cn,🌍国外媒体🌍
   - GEOSITE,huggingface,🌍国外媒体🌍
   - GEOSITE,category-netdisk-!cn,🌍国外媒体🌍
-
-
-  - GEOSITE,CATEGORY-AI-!CN,🧠人工智能🧠
-
-  - GEOSITE,category-cryptocurrency,🪙加密货币🪙
-
+  - GEOSITE,python,🌍国外媒体🌍
+  - GEOSITE,github,🌍国外媒体🌍
   - RULE-SET,GlobalMedia_OCD_Domain,🌍国外媒体🌍
   - RULE-SET,GlobalMedia_OCD_IP,🌍国外媒体🌍,no-resolve
+
+  - GEOSITE,category-ai-!cn,🧠人工智能🧠
+
+  - GEOSITE,category-cryptocurrency,🪙加密货币🪙
 
   - MATCH,📌节点选择📌
 
@@ -140,80 +136,6 @@ rule-providers:
     format: mrs
 
 
-  GoogleFCM_OCD_Domain:
-    type: http
-    path: ./rule/GoogleFCM_OCD_Domain.mrs
-    url: "https://cdn.jsdelivr.net/gh/peiyingyao/Rule-for-OCD@master/rule/Clash/GoogleFCM/GoogleFCM_OCD_Domain.mrs"
-    interval: 86400
-    proxy: DIRECT
-    behavior: domain
-    format: mrs
-
-  GoogleFCM_OCD_IP:
-    type: http
-    path: ./rule/GoogleFCM_OCD_IP.mrs
-    url: "https://cdn.jsdelivr.net/gh/peiyingyao/Rule-for-OCD@master/rule/Clash/GoogleFCM/GoogleFCM_OCD_IP.mrs"
-    interval: 86400
-    proxy: DIRECT
-    behavior: ipcidr
-    format: mrs
-
-
-  Lan_OCD_Domain:
-    type: http
-    path: ./rule/Lan_OCD_Domain.mrs
-    url: "https://cdn.jsdelivr.net/gh/peiyingyao/Rule-for-OCD@master/rule/Clash/Lan/Lan_OCD_Domain.mrs"
-    interval: 86400
-    proxy: DIRECT
-    behavior: domain
-    format: mrs
-
-  Lan_OCD_IP:
-    type: http
-    path: ./rule/Lan_OCD_IP.mrs
-    url: "https://cdn.jsdelivr.net/gh/peiyingyao/Rule-for-OCD@master/rule/Clash/Lan/Lan_OCD_IP.mrs"
-    interval: 86400
-    proxy: DIRECT
-    behavior: ipcidr
-    format: mrs
-
-  Telegram_OCD_Domain:
-    type: http
-    path: ./rule/Telegram_OCD_Domain.mrs
-    url: "https://cdn.jsdelivr.net/gh/peiyingyao/Rule-for-OCD@master/rule/Clash/Telegram/Telegram_OCD_Domain.mrs"
-    interval: 86400
-    proxy: DIRECT
-    behavior: domain
-    format: mrs
-
-  Telegram_OCD_IP:
-    type: http
-    path: ./rule/Telegram_OCD_IP.mrs
-    url: "https://cdn.jsdelivr.net/gh/peiyingyao/Rule-for-OCD@master/rule/Clash/Telegram/Telegram_OCD_IP.mrs"
-    interval: 86400
-    proxy: DIRECT
-    behavior: ipcidr
-    format: mrs
-
-  Telegram_OCD_Domain:
-    type: http
-    path: ./rule/Telegram_OCD_Domain.mrs
-    url: "https://cdn.jsdelivr.net/gh/peiyingyao/Rule-for-OCD@master/rule/Clash/Telegram/Telegram_OCD_Domain.mrs"
-    interval: 86400
-    proxy: DIRECT
-    behavior: domain
-    format: mrs
-
-  Telegram_OCD_IP:
-    type: http
-    path: ./rule/Telegram_OCD_IP.mrs
-    url: "https://cdn.jsdelivr.net/gh/peiyingyao/Rule-for-OCD@master/rule/Clash/Telegram/Telegram_OCD_IP.mrs"
-    interval: 86400
-    proxy: DIRECT
-    behavior: ipcidr
-    format: mrs
-
-
 proxy-groups:
   - name: 📌节点选择📌
     type: select
@@ -268,6 +190,18 @@ proxy-groups:
     include-all-providers: false
     include-all-proxies: true
     proxies: []
+
+  - name: ⚡自动选择⚡
+    type: url-test
+    url: https://www.google.com/generate_204
+    interval: 600
+    timeout: 3000
+    max-failed-times: 3
+    tolerance: 100
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
+    include-all-providers: false
+    include-all-proxies: true
+    proxies: [ ]
 
   - name: 🇯🇵日韩节点🇯🇵
     type: url-test
