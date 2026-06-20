@@ -49,28 +49,25 @@ dns:
 
 rules:
   - GEOSITE,category-ads-all,REJECT
-  - RULE-SET,Advertising_OCD_Domain,REJECT
   - RULE-SET,Advertising_OCD_IP,REJECT,no-resolve
 
   - DOMAIN-SUFFIX,pages.dev,DIRECT
 
   - GEOSITE,cn,DIRECT
-  - RULE-SET,ChinaMax_OCD_Domain,DIRECT
-  - RULE-SET,ChinaMax_OCD_IP,DIRECT,no-resolve
+
+  - GEOSITE,googlefcm,DIRECT
 
   - GEOSITE,private,DIRECT
   - GEOIP,private,DIRECT,no-resolve
 
-  - GEOSITE,googlefcm,DIRECT
-
-  - GEOIP,telegram,🌍国外媒体🌍,no-resolve
-  - GEOSITE,telegram,🌍国外媒体🌍
-  - GEOSITE,category-cdn-!cn,🌍国外媒体🌍
-  - GEOSITE,huggingface,🌍国外媒体🌍
-  - GEOSITE,category-netdisk-!cn,🌍国外媒体🌍
-  - GEOSITE,python,🌍国外媒体🌍
-  - GEOSITE,github,🌍国外媒体🌍
-  - GEOSITE,youtube,🌍国外媒体🌍
+  - GEOIP,telegram,⚖️负载均衡⚖️,no-resolve
+  - GEOSITE,telegram,⚖️负载均衡⚖️
+  - GEOSITE,category-cdn-!cn,⚖️负载均衡⚖️
+  - GEOSITE,huggingface,⚖️负载均衡⚖️
+  - GEOSITE,category-netdisk-!cn,⚖️负载均衡⚖️
+  - GEOSITE,python,⚖️负载均衡⚖️
+  - GEOSITE,github,⚖️负载均衡⚖️
+  - GEOSITE,youtube,⚖️负载均衡⚖️
 
   - GEOSITE,category-ai-!cn,🧠人工智能🧠
 
@@ -80,37 +77,10 @@ rules:
 
 
 rule-providers:
-  Advertising_OCD_Domain:
-    type: http
-    path: ./rule/Advertising_OCD_Domain.mrs
-    url: "https://cdn.jsdelivr.net/gh/peiyingyao/Rule-for-OCD@master/rule/Clash/Advertising/Advertising_OCD_Domain.mrs"
-    interval: 86400
-    proxy: DIRECT
-    behavior: domain
-    format: mrs
-
   Advertising_OCD_IP:
     type: http
     path: ./rule/Advertising_OCD_IP.mrs
     url: "https://cdn.jsdelivr.net/gh/peiyingyao/Rule-for-OCD@master/rule/Clash/Advertising/Advertising_OCD_IP.mrs"
-    interval: 86400
-    proxy: DIRECT
-    behavior: ipcidr
-    format: mrs
-
-  ChinaMax_OCD_Domain:
-    type: http
-    path: ./rule/ChinaMax_OCD_Domain.mrs
-    url: "https://cdn.jsdelivr.net/gh/peiyingyao/Rule-for-OCD@master/rule/Clash/ChinaMax/ChinaMax_OCD_Domain.mrs"
-    interval: 86400
-    proxy: DIRECT
-    behavior: domain
-    format: mrs
-
-  ChinaMax_OCD_IP:
-    type: http
-    path: ./rule/ChinaMax_OCD_IP.mrs
-    url: "https://cdn.jsdelivr.net/gh/peiyingyao/Rule-for-OCD@master/rule/Clash/ChinaMax/ChinaMax_OCD_IP.mrs"
     interval: 86400
     proxy: DIRECT
     behavior: ipcidr
@@ -142,19 +112,6 @@ proxy-groups:
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺 #|HK|香港|🇭🇰|US|美国|🇺🇸
     include-all-proxies: true
     proxies: []
-
-  - name: 🌍国外媒体🌍
-    type: select
-    url: https://www.google.com/generate_204
-    interval: 600
-    timeout: 3000
-    max-failed-times: 3
-    include-all-proxies: true
-    proxies:
-      - ⚖️负载均衡⚖️
-      - ⚡自动选择⚡
-      - 🇯🇵日韩节点🇯🇵
-      - 🇭🇰港台节点🇭🇰
 
   - name: 🪙加密货币🪙
     type: url-test
@@ -212,6 +169,3 @@ proxy-groups:
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷  #|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|🇷🇺
     include-all-proxies: true
     proxies: []
-
-
-
