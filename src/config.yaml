@@ -136,6 +136,18 @@ proxy-groups:
     include-all-proxies: true
     proxies: [ ]
 
+  - name: ⚖️负载均衡⚖️
+    type: load-balance
+    strategy: consistent-hashing
+    url: https://web.telegram.org/k
+    interval: 600
+    timeout: 3000
+    max-failed-times: 3
+    tolerance: 100
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷  #|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|🇷🇺
+    include-all-proxies: true
+    proxies: []
+    
   - name: 🇯🇵日韩节点🇯🇵
     type: url-test
     url: https://www.dlsite.com
@@ -157,15 +169,3 @@ proxy-groups:
     filter: HK|香港|🇭🇰|TW|台湾|🇹🇼
     include-all-proxies: true
     proxies: [ ]
-
-  - name: ⚖️负载均衡⚖️
-    type: load-balance
-    strategy: consistent-hashing
-    url: https://web.telegram.org/k
-    interval: 600
-    timeout: 3000
-    max-failed-times: 3
-    tolerance: 100
-    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷  #|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|🇷🇺
-    include-all-proxies: true
-    proxies: []
