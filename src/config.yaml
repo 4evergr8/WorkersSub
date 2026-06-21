@@ -1,5 +1,5 @@
 mode: rule
-external-controller: 127.0.0.1:9090
+external-controller: 0.0.0.0:9090
 external-ui: ./metacubexd
 allow-lan: false
 log-level: warning
@@ -54,6 +54,7 @@ rules:
   - DOMAIN-SUFFIX,pages.dev,DIRECT
 
   - GEOSITE,cn,DIRECT
+  - GEOIP,cn,DIRECT,no-resolve
 
   - GEOSITE,googlefcm,DIRECT
 
