@@ -137,3 +137,6 @@ proxy-groups:
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷  #|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|🇷🇺
     include-all-proxies: true
     proxies: []
+
+proxies:
+  {{ proxies }}
