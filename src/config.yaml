@@ -1,12 +1,12 @@
 mode: rule
-external-controller: 0.0.0.0:9090
+external-controller: 127.0.0.1:9090
 external-ui: ./metacubexd
 allow-lan: false
 log-level: warning
-ipv6: true
-keep-alive-idle: 15
-keep-alive-interval: 10
-disable-keep-alive: false
+ipv6: false
+disable-keep-alive: true
+keep-alive-idle: 10
+keep-alive-interval: 60
 unified-delay: false
 tcp-concurrent: true
 geodata-loader: memconservative
@@ -36,15 +36,17 @@ dns:
   enable: true
   cache-algorithm: lru
   listen: 0.0.0.0:1053
-  ipv6: true
+  ipv6: false
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
   fake-ip-filter-mode: blacklist
   fake-ip-filter:
     - geosite:private
   nameserver:
-    - tls://1.12.12.12:853
+    - tls://119.29.29.29:853
     - tls://223.5.5.5:853
+    - tls://1.1.1.1:853
+    - tls://8.8.8.8:853
 
 
 rules:
@@ -61,20 +63,20 @@ rules:
   - GEOSITE,private,DIRECT
   - GEOIP,private,DIRECT,no-resolve
 
+  - GEOSITE,samsung,DIRECT
+
   - GEOIP,telegram,⚖️负载均衡⚖️,no-resolve
   - GEOSITE,telegram,⚖️负载均衡⚖️
-  - GEOSITE,category-cdn-!cn,⚖️负载均衡⚖️
+ # - GEOSITE,category-cdn-!cn,⚖️负载均衡⚖️
   - GEOSITE,huggingface,⚖️负载均衡⚖️
   - GEOSITE,category-netdisk-!cn,⚖️负载均衡⚖️
-  - GEOSITE,python,⚖️负载均衡⚖️
-  - GEOSITE,github,⚖️负载均衡⚖️
   - GEOSITE,youtube,⚖️负载均衡⚖️
 
   - GEOSITE,category-ai-!cn,🧠人工智能🧠
 
   - GEOSITE,category-cryptocurrency,🪙加密货币🪙
 
-  - MATCH,📌节点选择📌
+  - MATCH,⚡自动选择⚡
 
 
 rule-providers:
@@ -89,18 +91,16 @@ rule-providers:
 
 
 proxy-groups:
-  - name: 📌节点选择📌
-    type: select
+  - name: ⚡自动选择⚡
+    type: url-test
     url: https://www.google.com/generate_204
     interval: 600
     timeout: 3000
     max-failed-times: 3
+    tolerance: 50
+    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
     include-all-proxies: true
-    proxies:
-      - ⚡自动选择⚡
-      - ⚖️负载均衡⚖️
-      - 🇯🇵日韩节点🇯🇵
-      - 🇭🇰港台节点🇭🇰
+    proxies: [ ]
 
   - name: 🧠人工智能🧠
     type: url-test
@@ -109,7 +109,7 @@ proxy-groups:
     interval: 600
     timeout: 3000
     max-failed-times: 3
-    tolerance: 100
+    tolerance: 50
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺 #|HK|香港|🇭🇰|US|美国|🇺🇸
     include-all-proxies: true
     proxies: []
@@ -121,21 +121,10 @@ proxy-groups:
     interval: 600
     timeout: 3000
     max-failed-times: 3
-    tolerance: 100
+    tolerance: 50
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|CA|加拿大|🇨🇦|US|美国|🇺🇸
     include-all-proxies: true
     proxies: []
-
-  - name: ⚡自动选择⚡
-    type: url-test
-    url: https://www.google.com/generate_204
-    interval: 600
-    timeout: 3000
-    max-failed-times: 3
-    tolerance: 100
-    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
-    include-all-proxies: true
-    proxies: [ ]
 
   - name: ⚖️负载均衡⚖️
     type: load-balance
@@ -144,29 +133,7 @@ proxy-groups:
     interval: 600
     timeout: 3000
     max-failed-times: 3
-    tolerance: 100
+    tolerance: 50
     exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷  #|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|🇷🇺
     include-all-proxies: true
     proxies: []
-
-  - name: 🇯🇵日韩节点🇯🇵
-    type: url-test
-    url: https://www.dlsite.com
-    interval: 600
-    timeout: 3000
-    max-failed-times: 3
-    tolerance: 100
-    filter: JP|日本|🇯🇵|KR|韩国|🇰🇷
-    include-all-proxies: true
-    proxies: [ ]
-
-  - name: 🇭🇰港台节点🇭🇰
-    type: url-test
-    url: https://www.google.com/generate_204
-    interval: 600
-    timeout: 3000
-    max-failed-times: 3
-    tolerance: 100
-    filter: HK|香港|🇭🇰|TW|台湾|🇹🇼
-    include-all-proxies: true
-    proxies: [ ]
