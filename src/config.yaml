@@ -45,8 +45,6 @@ dns:
   nameserver:
     - tls://119.29.29.29:853
     - tls://223.5.5.5:853
-    - tls://1.1.1.1:853
-    - tls://8.8.8.8:853
 
 
 rules:
@@ -56,16 +54,11 @@ rules:
   - DOMAIN-SUFFIX,pages.dev,DIRECT
 
   - GEOSITE,cn,DIRECT
-  - GEOIP,cn,DIRECT,no-resolve
 
   - GEOSITE,googlefcm,DIRECT
 
   - GEOSITE,private,DIRECT
-  - GEOIP,private,DIRECT,no-resolve
 
-  - GEOSITE,samsung,DIRECT
-
-  - GEOIP,telegram,⚖️负载均衡⚖️,no-resolve
   - GEOSITE,telegram,⚖️负载均衡⚖️
   - GEOSITE,huggingface,⚖️负载均衡⚖️
   - GEOSITE,category-netdisk-!cn,⚖️负载均衡⚖️
@@ -75,7 +68,16 @@ rules:
 
   - GEOSITE,category-cryptocurrency,🪙加密货币🪙
 
+  - GEOSITE,geolocation-!cn,⚡自动选择⚡
+
+  - GEOIP,private,DIRECT
+
+  - GEOIP,telegram,⚖️负载均衡⚖️,no-resolve
+
+  - GEOIP,cn,DIRECT
+
   - MATCH,⚡自动选择⚡
+
 
 
 rule-providers:
