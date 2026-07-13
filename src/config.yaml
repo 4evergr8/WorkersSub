@@ -57,6 +57,8 @@ rules:
 
   - GEOSITE,googlefcm,DIRECT
 
+  - GEOSITE,samsung,DIRECT
+
   - GEOSITE,private,DIRECT
 
   - GEOSITE,telegram,⚖️负载均衡⚖️
