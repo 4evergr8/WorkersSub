@@ -70,7 +70,7 @@ rules:
 
   - GEOSITE,category-cryptocurrency,🪙加密货币🪙
 
-  - GEOSITE,geolocation-!cn,⚡自动选择⚡
+  - GEOSITE,geolocation-!cn,📍节点选择📍
 
   - GEOIP,private,DIRECT
 
@@ -78,7 +78,7 @@ rules:
 
   - GEOIP,cn,DIRECT
 
-  - MATCH,⚡自动选择⚡
+  - MATCH,📍节点选择📍
 
 
 
@@ -94,6 +94,17 @@ rule-providers:
 
 
 proxy-groups:
+  - name: 📍节点选择📍
+    type: select
+    url: https://www.google.com/generate_204
+    interval: 0
+    timeout: 3000
+    proxies:
+      - ⚡自动选择⚡
+      - ⚖️负载均衡⚖️
+      - 🇯🇵日本节点🇯🇵
+      - 🇺🇸美国节点🇺🇸
+
   - name: ⚡自动选择⚡
     type: url-test
     url: https://www.google.com/generate_204
@@ -101,7 +112,7 @@ proxy-groups:
     timeout: 3000
     max-failed-times: 3
     tolerance: 50
-    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
+    exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
     include-all-proxies: true
     proxies: [ ]
 
@@ -113,7 +124,7 @@ proxy-groups:
     timeout: 3000
     max-failed-times: 3
     tolerance: 50
-    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺 #|HK|香港|🇭🇰|US|美国|🇺🇸
+    exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺 #|HK|香港|🇭🇰|US|美国|🇺🇸
     include-all-proxies: true
     proxies: []
 
@@ -125,7 +136,7 @@ proxy-groups:
     timeout: 3000
     max-failed-times: 3
     tolerance: 50
-    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|CA|加拿大|🇨🇦|US|美国|🇺🇸
+    exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|CA|加拿大|🇨🇦|US|美国|🇺🇸
     include-all-proxies: true
     proxies: []
 
@@ -137,6 +148,28 @@ proxy-groups:
     timeout: 3000
     max-failed-times: 3
     tolerance: 50
-    exclude-filter: 订阅|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷  #|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|🇷🇺
+    exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷  #|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|🇷🇺
     include-all-proxies: true
     proxies: []
+
+  - name: 🇯🇵日本节点🇯🇵
+    type: url-test
+    url: https://www.dlsite.com
+    interval: 600
+    timeout: 3000
+    max-failed-times: 3
+    tolerance: 50
+    include-filter: JP|日本|🇯🇵
+    include-all-proxies: true
+    proxies: [ ]
+
+  - name: 🇺🇸美国节点🇺🇸
+    type: url-test
+    url: https://www.dlsite.com
+    interval: 600
+    timeout: 3000
+    max-failed-times: 3
+    tolerance: 50
+    include-filter: US|美国|🇺🇸
+    include-all-proxies: true
+    proxies: [ ]
