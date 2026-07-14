@@ -20,7 +20,7 @@ geox-url:
   geosite: "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat"
 profile:
   store-selected: false
-  store-fake-ip: false
+  store-fake-ip: true
 
 
 tun:
@@ -108,7 +108,7 @@ proxy-groups:
   - name: ⚡自动选择⚡
     type: url-test
     url: https://www.google.com/generate_204
-    interval: 600
+    interval: 1800
     timeout: 3000
     max-failed-times: 3
     tolerance: 50
@@ -118,9 +118,9 @@ proxy-groups:
 
   - name: 🧠人工智能🧠
     type: url-test
-    url: https://api.openai.com/v1/models
-    expected-status: 401
-    interval: 600
+    url: https://chatgpt.com/
+    expected-status: 200
+    interval: 1800
     timeout: 3000
     max-failed-times: 3
     tolerance: 50
@@ -132,7 +132,7 @@ proxy-groups:
     type: url-test
     url: https://api.binance.com/api/v3/ping
     expected-status: 200
-    interval: 600
+    interval: 1800
     timeout: 3000
     max-failed-times: 3
     tolerance: 50
@@ -144,7 +144,7 @@ proxy-groups:
     type: load-balance
     strategy: consistent-hashing
     url: https://web.telegram.org/k
-    interval: 600
+    interval: 1800
     timeout: 3000
     max-failed-times: 3
     tolerance: 50
@@ -155,7 +155,7 @@ proxy-groups:
   - name: 🇯🇵日本节点🇯🇵
     type: url-test
     url: https://www.dlsite.com
-    interval: 600
+    interval: 1800
     timeout: 3000
     max-failed-times: 3
     tolerance: 50
@@ -166,7 +166,7 @@ proxy-groups:
   - name: 🇺🇸美国节点🇺🇸
     type: url-test
     url: https://www.dlsite.com
-    interval: 600
+    interval: 1800
     timeout: 3000
     max-failed-times: 3
     tolerance: 50
