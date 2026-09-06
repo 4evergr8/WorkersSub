@@ -1,9 +1,9 @@
 mode: rule
-external-controller: 127.0.0.1:9090
+external-controller: 0.0.0.0:9090
 external-ui: ./metacubexd
 allow-lan: false
 log-level: warning
-ipv6: false
+ipv6: true
 disable-keep-alive: true
 keep-alive-idle: 10
 keep-alive-interval: 60
@@ -16,8 +16,8 @@ geo-update-interval: 24
 etag-support: true
 geodata-mode: true
 geox-url:
-  geoip: "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat"
-  geosite: "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat"
+  geoip: "https://fastly.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat"
+  geosite: "https://fastly.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat"
 profile:
   store-selected: false
   store-fake-ip: true
@@ -36,7 +36,7 @@ dns:
   enable: true
   cache-algorithm: lru
   listen: 0.0.0.0:1053
-  ipv6: false
+  ipv6: true
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
   fake-ip-filter-mode: blacklist
@@ -54,30 +54,29 @@ rules:
   - GEOSITE,category-ads-all,REJECT
   - RULE-SET,Advertising_OCD_IP,REJECT,no-resolve
 
+ # - GEOSITE,pikpak,📍节点选择📍
+
+  - GEOSITE,china-list,DIRECT
+  - GEOIP,cn,DIRECT,no-resolve
   - GEOIP,private,DIRECT,no-resolve
-  - DOMAIN-SUFFIX,pages.dev,DIRECT
-  - GEOSITE,cn,DIRECT
+
   - GEOSITE,googlefcm,DIRECT
   - GEOSITE,samsung,DIRECT
   - GEOSITE,private,DIRECT
 
+  - DOMAIN-SUFFIX,pages.dev,DIRECT
+
+
   - GEOIP,telegram,⚖️负载均衡⚖️,no-resolve
   - GEOSITE,telegram,⚖️负载均衡⚖️
   - GEOSITE,huggingface,⚖️负载均衡⚖️
+  - DOMAIN-SUFFIX,storage.googleapis.com,⚖️负载均衡⚖️
   - GEOSITE,category-netdisk-!cn,⚖️负载均衡⚖️
+  - GEOSITE,youtube,⚖️负载均衡⚖️
 
   - GEOSITE,category-ai-!cn,🧠人工智能🧠
 
   - GEOSITE,category-cryptocurrency,🪙加密货币🪙
-
-  - GEOSITE,dlsite,🇯🇵日本节点🇯🇵
-  - GEOSITE,dmm,🇯🇵日本节点🇯🇵
-  - GEOSITE,pixiv,🇯🇵日本节点🇯🇵
-
-  - GEOSITE,geolocation-!cn,📍节点选择📍
-  - GEOSITE,tld-!cn,📍节点选择📍
-
-  - GEOIP,cn,DIRECT
 
   - MATCH,📍节点选择📍
 
@@ -87,7 +86,7 @@ rule-providers:
   Advertising_OCD_IP:
     type: http
     path: ./rule/Advertising_OCD_IP.mrs
-    url: "https://cdn.jsdelivr.net/gh/peiyingyao/Rule-for-OCD@master/rule/Clash/Advertising/Advertising_OCD_IP.mrs"
+    url: "https://fastly.jsdelivr.net/gh/peiyingyao/Rule-for-OCD@master/rule/Clash/Advertising/Advertising_OCD_IP.mrs"
     interval: 86400
     proxy: DIRECT
     behavior: ipcidr
@@ -108,10 +107,10 @@ proxy-groups:
     type: url-test
     url: https://www.google.com/generate_204
     expected-status: 204
-    interval: 1800
-    timeout: 3000
+    interval: 600
+    timeout: 2000
     max-failed-times: 3
-    tolerance: 100
+    tolerance: 50
     exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
     include-all-proxies: true
     proxies: [ ]
@@ -120,11 +119,11 @@ proxy-groups:
     type: url-test
     url: https://api.openai.com/v1/models
     expected-status: 401
-    interval: 1800
-    timeout: 3000
+    interval: 600
+    timeout: 2000
     max-failed-times: 3
-    tolerance: 100
-    exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺 #|HK|香港|🇭🇰|US|美国|🇺🇸
+    tolerance: 50
+    exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
     include-all-proxies: true
     proxies: [ ]
 
@@ -132,23 +131,11 @@ proxy-groups:
     type: url-test
     url: https://api.binance.com/api/v3/ping
     expected-status: 200
-    interval: 1800
-    timeout: 3000
+    interval: 600
+    timeout: 2000
     max-failed-times: 3
-    tolerance: 100
+    tolerance: 50
     exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|CA|加拿大|🇨🇦|US|美国|🇺🇸
-    include-all-proxies: true
-    proxies: [ ]
-
-  - name: ⚖️负载均衡⚖️
-    type: load-balance
-    strategy: consistent-hashing
-    url: https://cdn5.telegram.org
-    interval: 1800
-    timeout: 3000
-    max-failed-times: 3
-    tolerance: 100
-    exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷  #|VN|越南|🇻🇳|MY|马来西亚|🇲🇾|🇷🇺
     include-all-proxies: true
     proxies: [ ]
 
@@ -156,10 +143,10 @@ proxy-groups:
     type: url-test
     url: https://www.google.com/generate_204
     expected-status: 204
-    interval: 1800
-    timeout: 3000
+    interval: 600
+    timeout: 2000
     max-failed-times: 3
-    tolerance: 100
+    tolerance: 50
     filter: JP|日本|🇯🇵
     include-all-proxies: true
     proxies: [ ]
@@ -168,10 +155,23 @@ proxy-groups:
     type: url-test
     url: https://www.google.com/generate_204
     expected-status: 204
-    interval: 1800
-    timeout: 3000
+    interval: 600
+    timeout: 2000
     max-failed-times: 3
-    tolerance: 100
+    tolerance: 50
     filter: US|美国|🇺🇸
+    include-all-proxies: true
+    proxies: [ ]
+
+  - name: ⚖️负载均衡⚖️
+    type: load-balance
+    strategy: round-robin
+    url: https://www.google.com/generate_204
+    expected-status: 204
+    interval: 600
+    timeout: 2000
+    max-failed-times: 3
+    tolerance: 50
+    exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
     include-all-proxies: true
     proxies: [ ]
