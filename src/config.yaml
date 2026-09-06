@@ -67,12 +67,12 @@ rules:
   - DOMAIN-SUFFIX,pages.dev,DIRECT
 
 
-  - GEOIP,telegram,⚖️负载均衡⚖️,no-resolve
-  - GEOSITE,telegram,⚖️负载均衡⚖️
-  - GEOSITE,huggingface,⚖️负载均衡⚖️
-  - DOMAIN-SUFFIX,storage.googleapis.com,⚖️负载均衡⚖️
-  - GEOSITE,category-netdisk-!cn,⚖️负载均衡⚖️
-  - GEOSITE,youtube,⚖️负载均衡⚖️
+  - GEOIP,telegram,🌪️高速下载🌪️,no-resolve
+  - GEOSITE,telegram,🌪️高速下载🌪️
+  - GEOSITE,huggingface,🌪️高速下载🌪️
+  - DOMAIN-SUFFIX,storage.googleapis.com,🌪️高速下载🌪️
+  - GEOSITE,category-netdisk-!cn,🌪️高速下载🌪️
+  - GEOSITE,youtube,🌪️高速下载🌪️
 
   - GEOSITE,category-ai-!cn,🧠人工智能🧠
 
@@ -114,6 +114,15 @@ proxy-groups:
     exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
     include-all-proxies: true
     proxies: [ ]
+
+  - name: 🌪️高速下载🌪️
+    type: select
+    interval: 0
+    proxies:
+      - ⚖️负载均衡⚖️
+      - ⚡自动选择⚡
+      - 🇯🇵日本节点🇯🇵
+      - 🇺🇸美国节点🇺🇸
 
   - name: 🧠人工智能🧠
     type: url-test
