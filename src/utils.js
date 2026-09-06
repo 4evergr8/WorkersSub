@@ -1,40 +1,16 @@
 import yaml from "js-yaml";
+
 // ===== clash 解析 =====
 export function clash(rawText) {
-    try {
-        const parsed = yaml.load(rawText);
-        const proxies = parsed?.proxies;
-
-        if (Array.isArray(proxies)) {
-            for (const p of proxies) p.udp = true;
-            return proxies;
-        }
-    } catch {}
-
-    // 兜底：逐行解析 flow style
-    const proxies = [];
-    const lines = rawText.split(/\r?\n/);
-
-    for (const line of lines) {
-        const t = line.trim();
-        if (!t.startsWith("- {")) continue;
-
-        try {
-            const obj = yaml.load("proxies:\n" + t);
-            if (obj?.proxies?.[0]) {
-                obj.proxies[0].udp = true;
-                proxies.push(obj.proxies[0]);
-            }
-        } catch {}
-    }
-
-    return proxies;
+    const parsed = yaml.load(rawText);
+    return parsed?.proxies;
 }
+
 // ===== v2ray 解析 =====
 export function v2ray(rawText) {
     if (!rawText || typeof rawText !== 'string') return null;
     try {
-        rawText=atob(rawText);
+        rawText = atob(rawText);
     } catch {
 
     }
@@ -77,7 +53,7 @@ export function v2ray(rawText) {
                 if (network === 'ws') {
                     node['ws-opts'] = {
                         path: query.path || '',
-                        headers: { Host: query.host || '' }
+                        headers: {Host: query.host || ''}
                     };
                 }
 
@@ -123,7 +99,7 @@ export function v2ray(rawText) {
                 if (query.type === 'ws') {
                     node['ws-opts'] = {
                         path: query.path || '',
-                        headers: { Host: query.host || url.hostname }
+                        headers: {Host: query.host || url.hostname}
                     };
                 }
 
@@ -166,12 +142,14 @@ export function v2ray(rawText) {
                 proxies.push(node);
             }
 
-        } catch (e) {}
+        } catch (e) {
+        }
 
     });
 
     return proxies.length ? proxies : null;
 }
+
 // ===== singbox 解析 =====
 export function singbox(rawText) {
 
@@ -280,7 +258,8 @@ export function singbox(rawText) {
                 proxies.push(node);
             }
 
-        } catch {}
+        } catch {
+        }
 
     });
 
