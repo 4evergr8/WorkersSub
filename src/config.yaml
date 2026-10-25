@@ -3,7 +3,7 @@ external-controller: 0.0.0.0:9090
 external-ui: ./metacubexd
 allow-lan: false
 log-level: warning
-ipv6: true
+ipv6: false
 disable-keep-alive: true
 keep-alive-idle: 10
 keep-alive-interval: 60
@@ -16,8 +16,8 @@ geo-update-interval: 24
 etag-support: true
 geodata-mode: true
 geox-url:
-  geoip: "https://fastly.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat"
-  geosite: "https://fastly.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat"
+  geoip: "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat"
+  geosite: "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat"
 profile:
   store-selected: false
   store-fake-ip: true
@@ -36,7 +36,7 @@ dns:
   enable: true
   cache-algorithm: lru
   listen: 0.0.0.0:1053
-  ipv6: true
+  ipv6: false
   enhanced-mode: fake-ip
   fake-ip-range: 198.18.0.1/16
   fake-ip-filter-mode: blacklist
@@ -59,11 +59,10 @@ rules:
   - GEOSITE,googlefcm,DIRECT
   - GEOSITE,private,DIRECT
 
-  - DOMAIN-SUFFIX,pages.dev,DIRECT
+  - DOMAIN-SUFFIX,trycloudflare.com,DIRECT
 
   - GEOIP,telegram,🌪️高速下载🌪️,no-resolve
   - GEOSITE,telegram,🌪️高速下载🌪️
-  - GEOSITE,huggingface,🌪️高速下载🌪️
   - DOMAIN-SUFFIX,storage.googleapis.com,🌪️高速下载🌪️
   - GEOSITE,category-netdisk-!cn,🌪️高速下载🌪️
   - GEOSITE,category-entertainment,🎶媒体娱乐🎶
@@ -71,6 +70,10 @@ rules:
   - GEOSITE,category-ai-!cn,🧠人工智能🧠
 
   - GEOSITE,category-cryptocurrency,🪙加密货币🪙
+
+  - GEOSITE,geolocation-!cn,⚡自动选择⚡
+
+  - GEOIP,cn,DIRECT
 
   - MATCH,⚡自动选择⚡
 
@@ -81,8 +84,8 @@ proxy-groups:
     url: https://www.google.com/generate_204
     expected-status: 204
     interval: 600
-    timeout: 3000
-    max-failed-times: 5
+    timeout: 5000
+    max-failed-times: 3
     tolerance: 50
     exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
     include-all: true
@@ -93,8 +96,8 @@ proxy-groups:
     url: https://api.openai.com/v1/models
     expected-status: 401
     interval: 600
-    timeout: 3000
-    max-failed-times: 5
+    timeout: 5000
+    max-failed-times: 3
     tolerance: 50
     exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺
     include-all: true
@@ -105,8 +108,8 @@ proxy-groups:
     url: https://api.binance.com/api/v3/ping
     expected-status: 200
     interval: 600
-    timeout: 3000
-    max-failed-times: 5
+    timeout: 5000
+    max-failed-times: 3
     tolerance: 50
     exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|US|美国|🇺🇸
     include-all: true
@@ -114,11 +117,11 @@ proxy-groups:
 
   - name: 🎶媒体娱乐🎶
     type: url-test
-    url: https://music.youtube.com/playlist?list=LM
-    expected-status: 200
+    url: https://one.google.com
+    expected-status: 302
     interval: 600
-    timeout: 3000
-    max-failed-times: 5
+    timeout: 5000
+    max-failed-times: 3
     exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
     include-all: true
     proxies: [ ]
@@ -126,11 +129,11 @@ proxy-groups:
   - name: 🌪️高速下载🌪️
     type: load-balance
     strategy: round-robin
-    url: https://kws5.web.telegram.org
+    url: https://www.google.com/generate_204
     expected-status: 204
     interval: 600
-    timeout: 3000
-    max-failed-times: 5
+    timeout: 5000
+    max-failed-times: 3
     exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺
     include-all: true
     proxies: [ ]
@@ -139,11 +142,18 @@ proxy-groups:
 proxy-providers:
   provider:
     type: http
-    url: "https://dffycghuj.pages.dev/sub?token=8ca6865eb091a8360c5c27303a9cdb55"
-    path: ./proxy_providers/provider1.yaml
+    url:
+    path:
     interval: 10800
     size-limit: 0
     header:
       User-Agent:
         - "clash.meta"
-    exclude-filter: "订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺"
+    exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
+    health-check:
+      enable: true
+      url: https://www.google.com/generate_204
+      interval: 600
+      timeout: 5000
+      lazy: true
+      expected-status: 204
