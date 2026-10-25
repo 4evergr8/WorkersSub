@@ -61,34 +61,43 @@ rules:
 
   - DOMAIN-SUFFIX,trycloudflare.com,DIRECT
 
-  - GEOIP,telegram,🌪️高速下载🌪️,no-resolve
-  - GEOSITE,telegram,🌪️高速下载🌪️
+  #- GEOIP,telegram,🌪️高速下载🌪️,no-resolve
+  #- GEOSITE,telegram,🌪️高速下载🌪️
   - DOMAIN-SUFFIX,storage.googleapis.com,🌪️高速下载🌪️
   - GEOSITE,category-netdisk-!cn,🌪️高速下载🌪️
-  - GEOSITE,category-entertainment,🎶媒体娱乐🎶
+  - GEOSITE,youtube,🎶YouTube🎶
 
   - GEOSITE,category-ai-!cn,🧠人工智能🧠
 
   - GEOSITE,category-cryptocurrency,🪙加密货币🪙
 
-  - GEOSITE,geolocation-!cn,⚡自动选择⚡
+  - GEOSITE,geolocation-!cn,📌节点选择📌
 
   - GEOIP,cn,DIRECT
 
-  - MATCH,⚡自动选择⚡
+  - MATCH,📌节点选择📌
 
 
 proxy-groups:
+  - name: 📌节点选择📌
+    type: select
+    filter: HK|香港|🇭🇰|US|美国|🇺🇸|JP|日本|🇯🇵
+    include-all-proxies: true
+    include-all-providers: true
+    proxies:
+      - ⚡自动选择⚡
+
   - name: ⚡自动选择⚡
     type: url-test
     url: https://www.google.com/generate_204
     expected-status: 204
     interval: 600
-    timeout: 5000
+    timeout: 3000
     max-failed-times: 3
     tolerance: 50
     exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
-    include-all: true
+    include-all-proxies: true
+    include-all-providers: true
     proxies: [ ]
 
   - name: 🧠人工智能🧠
@@ -96,11 +105,12 @@ proxy-groups:
     url: https://api.openai.com/v1/models
     expected-status: 401
     interval: 600
-    timeout: 5000
+    timeout: 3000
     max-failed-times: 3
     tolerance: 50
     exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺
-    include-all: true
+    include-all-proxies: true
+    include-all-providers: true
     proxies: [ ]
 
   - name: 🪙加密货币🪙
@@ -108,22 +118,24 @@ proxy-groups:
     url: https://api.binance.com/api/v3/ping
     expected-status: 200
     interval: 600
-    timeout: 5000
+    timeout: 3000
     max-failed-times: 3
     tolerance: 50
     exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|US|美国|🇺🇸
-    include-all: true
+    include-all-proxies: true
+    include-all-providers: true
     proxies: [ ]
 
-  - name: 🎶媒体娱乐🎶
+  - name: 🎶YouTube🎶
     type: url-test
     url: https://one.google.com
     expected-status: 302
     interval: 600
-    timeout: 5000
+    timeout: 3000
     max-failed-times: 3
     exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
-    include-all: true
+    include-all-proxies: true
+    include-all-providers: true
     proxies: [ ]
 
   - name: 🌪️高速下载🌪️
@@ -132,10 +144,11 @@ proxy-groups:
     url: https://www.google.com/generate_204
     expected-status: 204
     interval: 600
-    timeout: 5000
+    timeout: 3000
     max-failed-times: 3
     exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺
-    include-all: true
+    include-all-proxies: true
+    include-all-providers: true
     proxies: [ ]
 
 
@@ -154,6 +167,6 @@ proxy-providers:
       enable: true
       url: https://www.google.com/generate_204
       interval: 600
-      timeout: 5000
+      timeout: 3000
       lazy: true
       expected-status: 204
