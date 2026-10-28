@@ -78,6 +78,26 @@ export default {
     }
 };
 
+// ===== 订阅名折叠：中位省略 =====
+const NAME_FOLD_AT = 7;   // 超过该长度才折叠
+const NAME_HEAD = 3;      // 头部保留字符数
+const NAME_TAIL = 3;      // 尾部保留字符数
+const ELLIPSIS = '…';
+
+export function foldName(s) {
+    const chars = Array.from(s);
+    if (chars.length <= NAME_FOLD_AT) return s;
+    return chars.slice(0, NAME_HEAD).join('') + ELLIPSIS + chars.slice(-NAME_TAIL).join('');
+}
+
+const decodeSeg = p => {
+    try {
+        return decodeURIComponent(p);
+    } catch {
+        return p;
+    }
+};
+
 // setHeaders 函数保持不变（你原来的代码）
 export function setHeaders(upstreamHeaders, link) {
     const cd = upstreamHeaders.get('Content-Disposition');
@@ -105,10 +125,10 @@ export function setHeaders(upstreamHeaders, link) {
                 domain = parts[parts.length - 2];
             }
 
-            const pathParts = url.pathname.split('/').filter(p => p.length > 0);
-            let nameParts = [domain];
-            if (pathParts.length >= 1) nameParts.push(pathParts[0]);
-            if (pathParts.length >= 2) nameParts.push(pathParts[1]);
+            const pathParts = url.pathname.split('/').filter(p => p.length > 0).map(decodeSeg);
+            let nameParts = [foldName(domain)];
+            if (pathParts.length >= 1) nameParts.push(foldName(pathParts[0]));
+            if (pathParts.length >= 2) nameParts.push(foldName(pathParts[1]));
 
             baseName = nameParts.join('/');
         } catch (e) {
