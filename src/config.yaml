@@ -61,8 +61,6 @@ rules:
 
   - DOMAIN-SUFFIX,trycloudflare.com,DIRECT
 
-  #- GEOIP,telegram,🌪️高速下载🌪️,no-resolve
-  #- GEOSITE,telegram,🌪️高速下载🌪️
   - DOMAIN-SUFFIX,storage.googleapis.com,🌪️高速下载🌪️
   - GEOSITE,category-netdisk-!cn,🌪️高速下载🌪️
   - GEOSITE,youtube,🎶YouTube🎶
@@ -86,16 +84,18 @@ proxy-groups:
     include-all-providers: true
     proxies:
       - ⚡自动选择⚡
+      - 🌪️高速下载🌪️
 
   - name: ⚡自动选择⚡
     type: url-test
     url: https://www.google.com/generate_204
-    expected-status: 204
     interval: 600
+    lazy: false
+    expected-status: 204
     timeout: 3000
     max-failed-times: 3
     tolerance: 50
-    exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
+    exclude-filter: KR|韩国|🇰🇷
     include-all-proxies: true
     include-all-providers: true
     proxies: [ ]
@@ -103,12 +103,12 @@ proxy-groups:
   - name: 🧠人工智能🧠
     type: url-test
     url: https://api.openai.com/v1/models
-    expected-status: 401
     interval: 600
+    lazy: true
+    expected-status: 401
     timeout: 3000
     max-failed-times: 3
     tolerance: 50
-    exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺
     include-all-proxies: true
     include-all-providers: true
     proxies: [ ]
@@ -118,10 +118,11 @@ proxy-groups:
     url: https://api.binance.com/api/v3/ping
     expected-status: 200
     interval: 600
+    lazy: true
     timeout: 3000
     max-failed-times: 3
     tolerance: 50
-    exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|US|美国|🇺🇸
+    exclude-filter: US|美国|🇺🇸
     include-all-proxies: true
     include-all-providers: true
     proxies: [ ]
@@ -131,9 +132,10 @@ proxy-groups:
     url: https://one.google.com
     expected-status: 302
     interval: 600
+    lazy: true
     timeout: 3000
     max-failed-times: 3
-    exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
+    exclude-filter: KR|韩国|🇰🇷
     include-all-proxies: true
     include-all-providers: true
     proxies: [ ]
@@ -146,7 +148,6 @@ proxy-groups:
     interval: 600
     timeout: 3000
     max-failed-times: 3
-    exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺
     include-all-proxies: true
     include-all-providers: true
     proxies: [ ]
@@ -162,7 +163,7 @@ proxy-providers:
     header:
       User-Agent:
         - "clash.meta"
-    exclude-filter: 订阅|频道|到期|官网|剩余|RU|俄罗斯|🇷🇺|KR|韩国|🇰🇷
+    exclude-filter: KR|韩国|🇰🇷
     health-check:
       enable: true
       url: https://www.google.com/generate_204
